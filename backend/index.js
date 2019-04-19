@@ -7,6 +7,7 @@ var port = 8080;
 var app = express();
 var cookieParser = require('cookie-parser');
 var { User } = require('./models/user');
+var {Cluster} = require('./models/cluster')
 var { mongoose } = require('./db/mongoose');
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,7 +37,7 @@ app.post('/login', function (req, res) {
     User.findOne({email: user}, function(err, result) {
         if (err) { /* handle err */ 
         console.log("error fetching data")
-        res.sendStatus(400).json({
+        res.status(400).json({
             success: false,
             message: 'error fetching data'
 
@@ -45,117 +46,87 @@ app.post('/login', function (req, res) {
         if (result) {
             // we have a result
             console.log("found result")
-            res.sendStatus(200).json({ success: true, rows: result });
+            res.status(200).json({ success: true, rows: result });
         } else {
             // we don't
             //console.log("no results found")
-            res.sendStatus(404).json({
+            res.status(404).json({
                 success: false,
                 message: 'Cannot fetch details.'
             });
         }
-    }
-    )
+    })
 })
-
-
-
-
-// collection.findOne({username: user}, function(err, result) {
-//     if (err) { /* handle err */ }
-
-//     if (result) {
-//         // we have a result
-//     } else {
-//         // we don't
-//     }
-// }
-// )
-// User.findOne({username: user})
-//     .then(item => {
-//       console.log("item",item)
-//     })
-//     .catch(err => {
-//     console.error("err",err)
-//     })
-
-app.get('/getProperty', function (request, response) {
-
-    console.log("Get Property details of property id selected-  " + request.query.id);
-    db.findProperty({
-        id: request.query.id
-    },  //success callback of finduser
-        function (rows) {
-            console.log(rows)
-            response.status(200).json({ success: true, rows: rows });
-        }, function (err) {
-            console.log(err);
-            response.status(401).json({
-                success: false,
-                message: 'Cannot fetch details.'
-            });
-        });
+app.get('/getFarmerList', function (req, res) {
+    console.log("Get Farmers list  " );
+    User.find({
+        role: 'Farmer'
+    }  //success callback of finduser
+    ,function (err, rows) {
+                    if (err) {
+                        console.log("failure callback 1")
+                        res.status(401).json({
+                            message: 'failed to fetch'
+                        });
+                    }
+                    if (rows.length > 0) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(200).json({
+                            data:rows,
+                            message: 'data fetched'
+                        });
+                    }
+                    else {
+                        console.log("failure callback 2")
+                        res.status(400).json({
+        
+                            message: 'db access error'
+                        });
+                    }
+                  
+                });
 });
 
+app.post('/addcluster', function (req, res) {
+    console.log("adding clusters....")
+   var clusterName= req.body.clusterName;
+   var createdDate=req.body.createdDate;
+   var status= req.body.status;
+   var fieldType= req.body.fieldType;
+   var user_email = req.body.user_email;
+   console.log("user_email",user_email+"clus name",clusterName)
+   console.log("createdDate",createdDate)
+   console.log("status",status)
+   console.log("cluster_type",fieldType)
+   console.log("createdDate",createdDate)
 
-// app.post('/login',function(request, response){
-//     db.findUser ({
-//         email: request.email
-
-//     }, function (row) {
-//         var user = { email: row.email};
-       
-//         console.log("row email "+row.email + row.password)
-//         crypt.compareHash(msg.password, row.password, function (err, isMatch) {
-//             console.log("inside compare hash");
-//             if (isMatch && !err) {
-//                 console.log("is matched true")
-//                var token = jwt.sign(user, config.secret, {
-//                  expiresIn: 10080 // in seconds
-//                });
-               
-//                 console.log("user found..",row)
-//                 const resData = {
-//                     authFlag : true,
-//                     user : row,
-//                    token: "Bearer "+token,
-//                     status: 200
-//                 }
-//                 callback(err,resData)
-                
-//             }
-//         else
-//             {  console.log("inside err" ,err)
-          
-//               const resData={
-//                   status: 403,
-//                   message : "password did not match"
-//               }
-//                callback(err,resData)
-           
-//             }
-//         },
-//             function (err) {
-//                 console.log(err);
-
-//                 const resData={
-//                     status: 401,
-//                     message : "Authentication failed 2. User not found."
-//                 }
-//                 callback(err,resData)
-
-//             });
-//     },
-//     function (err) {
-//         console.log("not found neha->",err);
-//         const resData={
-//             status: 401,
-//             message : "Authentication failed 2. User not found."
-//         }
-//         callback(err,resData)
-
-//     });
-// });
+   var newClusterdata = new Cluster({
+   cluster_name: req.body.clusterName,
+   created_date:req.body.createdDate,
+    status:req.body.status,
+    field_type: req.body.fieldType,
+    user_email : req.body.email,
+});
+newClusterdata.save().then((cluster)=> {
+    console.log("Property created : ", cluster);
+   // successCallback()
+    res.status(201).json({
+        data:cluster,
+        message: 'Cluster created'
+    });
+}, (err) => {
+    console.log("Error Creating cluster");
+    res.status(400).json({
+        message: 'Cannot create cluster.'
+    });
+}), function (err) {
+    console.log(err);
+    res.status(401).json({
+        message: 'connection error with db'
+    });
+  }
+})
 
 
 

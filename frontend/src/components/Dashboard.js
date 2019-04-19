@@ -5,7 +5,7 @@ import axios from 'axios';
 
 class Dashboard extends Component {
     constructor(){
-        super();
+       // super();
         
     }  
    

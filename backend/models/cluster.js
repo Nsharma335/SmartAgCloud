@@ -1,15 +1,22 @@
 var mongoose = require('mongoose');
 
 var Cluster = mongoose.model('Cluster',{
-    clustername :{
+    cluster_name :{
         type : String
     },
-    installeddate : {
+    created_date : {
         type : String
     },
     status : {
         type : String
+    },
+    field_type:{
+        type: String
+    },
+    user_email:{
+        type: String
     }
+
 },"Cluster");
 
 module.exports = {Cluster};

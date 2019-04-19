@@ -7,9 +7,11 @@ import './index.css';
 import Home from './components/Home';
 import AddCluster from './components/AddCluster';
 import Dashboard from './components/Dashboard';
+import ListFarmers from './components/ListFarmers';
 import reducer from './store/reducer';
 import {Provider} from 'react-redux';
 import promise from "redux-promise";
+
 //to work with redux dev tool
 
 const composePlugin = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -29,6 +31,7 @@ ReactDOM.render(
                 <Route exact path="/" component={Home}/>
                 <Route path="/addcluster" component={AddCluster}/>
                 <Route path="/dashboard" component={Dashboard}/>
+                <Route path="/getFarmerList" component={ListFarmers}/>
                 
                 </div>
             </Router>

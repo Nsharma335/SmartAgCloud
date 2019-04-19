@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@toverux/ngx-sweetalert2": "^4.0.0",
     "axios": "^0.18.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -11,7 +12,7 @@
     "react-scripts": "2.1.8",
     "redux": "^4.0.1",
     "redux-promise": "^0.6.0",
-    "sweetalert2": "^8.8.5"
+    "sweetalert2": "^7.33.1"
   },
   "scripts": {
     "start": "react-scripts start",

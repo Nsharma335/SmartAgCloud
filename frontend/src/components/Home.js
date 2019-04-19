@@ -123,16 +123,21 @@ const mapDispatchStateToProps = dispatch => {
                     //          }
                         if (response.code === 404) {
                         console.log("User Not found")
-                        swal('Email not registered!', "Please register to login.", 'error');
+                        swal({
+                            type: 'error',
+                            title: 'Email not registered.',
+                            text: 'You entered invalid credentials or your email not registered!'
+                        })
                             }
+
                             if (response.status === 200) {
                                 console.log("success")
-                                // this.setState({
-                                //     authFlag: true,
-            
-                                // });
-                                window.location.href = "http://localhost:3000/dashboard";
-            
+                                swal({
+                                    type: 'success',
+                                    title: 'login Credentials.',
+                                    text: 'You entered invalid credentials or your email not registered!'
+                                })
+                                //window.location.href = "http://localhost:3000/dashboard";
                             } 
                         console.log("response fetched..", response.data.resData)
                         dispatch({type: 'USER_INFO',payload :response.data.updatedList, statusCode : response.status})
@@ -142,4 +147,4 @@ const mapDispatchStateToProps = dispatch => {
     }
 }
 
-export default connect(mapDispatchStateToProps)(Home);
+export default connect(null,mapDispatchStateToProps)(Home);
