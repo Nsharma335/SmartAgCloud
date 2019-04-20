@@ -19,7 +19,6 @@ class AddCluster extends Component {
         this.statusChangeHandler = this.statusChangeHandler.bind(this);
         this.submitClusterData = this.submitClusterData.bind(this);
         this.fieldTypeChangeHandler=this.fieldTypeChangeHandler.bind(this);
-        this.submitClusterDataAndAddNewNode = this.submitClusterDataAndAddNewNode.bind(this);
     }  
     clusterNameChangeHandler(e) {
         this.setState({ clusterName: e.target.value });
@@ -62,43 +61,43 @@ class AddCluster extends Component {
             .then(response => {
                 console.log("Status Code : ", response);  
            
-             if(response.status==201)
-             {
-                //  swal({
-                //     type: 'success',
-                //     title: 'Data saved successfully',
-                //     text: 'data saved'
-                // })
-                 window.location.href = "http://localhost:3000/dashboard";
-             }
-            });
-    }
+            //  if(response.status==201)
+            //  {
+            //     //  swal({
+            //     //     type: 'success',
+            //     //     title: 'Data saved successfully',
+            //     //     text: 'data saved'
+            //     // })
+            //      // window.location.href = "http://localhost:3000/dashboard";
+            //  }
+            // });
+    });
+}
+    // submitClusterDataAndAddNewNode= e => {
+    //     //prevent page from refresh
+    //     e.preventDefault();
+    //     console.log("inside save and redirect to new node from client side..")
+    //     console.log("email to be sent" ,this.state.email)
+    //     const data = {
+    //         email:this.state.email,
+    //         clusterName: this.state.clusterName,
+    //         createdDate: this.state.createdDate,
+    //         status: this.state.status,
+    //         fieldType:this.state.fieldType
+    //     };
 
-    submitClusterDataAndAddNewNode= e => {
-        //prevent page from refresh
-        e.preventDefault();
-        console.log("inside save and redirect to new node from client side..")
-        console.log("email to be sent" ,this.state.email)
-        const data = {
-            email:this.state.email,
-            clusterName: this.state.clusterName,
-            createdDate: this.state.createdDate,
-            status: this.state.status,
-            fieldType:this.state.fieldType
-        };
-
-        axios.post('http://localhost:3001/addcluster', data, { withCredentials: true })
-            .then(response => {
-                console.log("Status Code for addcluster : ", response);  
-                //now redirect to addNode page
-             });
-             //now redirect to addNode page
-        axios.post('http://localhost:3001/addnode', data, { withCredentials: true })
-            .then(response => {
-                console.log("Status Code addnode: ", response);  
+    //     axios.post('http://localhost:3001/addcluster', data, { withCredentials: true })
+    //         .then(response => {
+    //             console.log("Status Code for addcluster : ", response);  
+    //             //now redirect to addNode page
+    //          });
+    //          //now redirect to addNode page
+    //     axios.post('http://localhost:3001/addnode', data, { withCredentials: true })
+    //         .then(response => {
+    //             console.log("Status Code addnode: ", response);  
                 
-             });
-    }
+    //          });
+    // }
 
 
     render(){         
@@ -188,8 +187,7 @@ class AddCluster extends Component {
 
                           <button onClick={this.submitClusterData} class="btn btn-primary">Save Cluster</button>
                           <div></div><br></br>  
-                          <button onClick={this.submitClusterDataAndAddNewNode} class="btn btn-primary">Save and Add new Node</button>
-
+                          <a href="http://localhost:3000/addNode">Save and Add new Node</a>
                       </div>
                   </div>
               </div>

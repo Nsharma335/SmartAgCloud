@@ -89,10 +89,12 @@ app.get('/getFarmerList', function (req, res) {
                 });
 });
 
-app.get('/getClusterList', function (req, res) {
+app.post('/getClusterList', function (req, res) {
+    var id = req.body.id
     console.log("Get Clusters list  " );
+    console.log("id   " ,req.body.id);
     Cluster.find({
-        user_email: 'abhishek@gmail.com' 
+        user_email: id
         //user_email: 'based on selected farmer from getFarmerList (previous page)' 
         //  Here we wil pick the select cluster_id,cluster_name, location, status for a particular farmer
      }  //success callback of finduser
