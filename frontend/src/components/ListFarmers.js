@@ -9,8 +9,10 @@ class ListFarmers extends Component {
     constructor(){
         super();
         this.state={
-            data:[]
+            data:[],
+            email:""
         }
+        this.setEmail=this.setEmail.bind(this);
     }  
     componentWillMount()
     {
@@ -33,38 +35,91 @@ class ListFarmers extends Component {
         })
     }
 
-
-    render(){ 
-        let farmers;
-        farmers = this.state.data.map(farmer => {        
-       return(
-           <div>
-               <table>
-                   <tbody>
-               
-            <tr>
-               <td>{farmer.firstName}</td>      
-               <td>{farmer.lastName}</td>                                  
-               <td>{farmer.email}</td>                      
-           </tr>
-           </tbody>
-           </table>
-           </div>
-       )
-    });
-    if (this.state.data != null) {
-        return (
-            <div>
-                    {farmers}
-                </div>
-
-        )
-
-
+    setEmail(e){
+        this.setState({
+            email:e.target.value
+        })
     }
 
-}
-}
+//     render(){ 
+//         let farmers;
+//         farmers = this.state.data.map(farmer => {        
+//        return(
+//            <div>
+//                <table>
+//                    <tbody>
+               
+//             <tr>
+//                <td>{farmer.firstName}</td>      
+//                <td>{farmer.lastName}</td>                                  
+//                <td>{farmer.email}</td>                      
+//            </tr>
+//            </tbody>
+//            </table>
+//            </div>
+//        )
+//     });
+//     if (this.state.data != null) {
+//         return (
+//             <div>
+//                     {farmers}
+//                 </div>
+
+//         )
 
 
+//     }
+
+// }
+// }
+selectFarmerEmailHandler(e)
+{
+    e.preventDefault();
+    localStorage.setItem('email_id',e.target.dataset.id);
+    window.location.href = "http://localhost:3000/addcluster"
+
+}
+
+render(){
+    let farmers;
+     farmers = this.state.data.map(farmer => {  
+return(
+    <div>
+<div className="container">
+  <div className="row">
+    <div className="col-sm-12">
+
+      <form>
+          <div>
+              <a href='#' onClick={this.selectFarmerEmailHandler} data-id={farmer.email}> {farmer.firstName} {farmer.lastName}</a>
+          </div>
+        {/* {<div className="radio">
+          <label>
+          <input type="radio" value={farmer.email} 
+          name="gh" checked={this.state.email} onClick={this.setEmail}/>
+            {farmer.email} ,{farmer.firstName} {farmer.lastName}
+          </label>
+</div> }*/}
+      </form>
+
+    </div>
+  </div>
+</div>
+    </div>
+
+)
+     });
+     
+     if (this.state.data != null) {
+                return (
+                    <div> Farmer List
+                            {farmers}
+                    </div>
+        
+                )
+        
+        
+            }
+}
+}
 export default ListFarmers;

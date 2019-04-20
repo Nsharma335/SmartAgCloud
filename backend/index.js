@@ -7,7 +7,8 @@ var port = 8080;
 var app = express();
 var cookieParser = require('cookie-parser');
 var { User } = require('./models/user');
-var {Cluster} = require('./models/cluster')
+var { Cluster } = require('./models/cluster')
+var { Node } = require('./models/node')
 var { mongoose } = require('./db/mongoose');
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -88,13 +89,48 @@ app.get('/getFarmerList', function (req, res) {
                 });
 });
 
+app.get('/getClusterList', function (req, res) {
+    console.log("Get Clusters list  " );
+    Cluster.find({
+        user_email: 'abhishek@gmail.com' 
+        //user_email: 'based on selected farmer from getFarmerList (previous page)' 
+        //  Here we wil pick the select cluster_id,cluster_name, location, status for a particular farmer
+     }  //success callback of finduser
+    ,function (err, rows) {
+                    if (err) {
+                        console.log("failure callback 1")
+                        res.status(401).json({
+                            message: 'failed to fetch'
+                        });
+                    }
+                    if (rows.length > 0) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(200).json({
+                            data:rows,
+                            message: 'data fetched'
+                        });
+                    }
+                    else {
+                        console.log("failure callback 2")
+                        res.status(400).json({
+        
+                            message: 'db access error'
+                        });
+                    }
+                  
+                });
+});
+
+
+
 app.post('/addcluster', function (req, res) {
     console.log("adding clusters....")
    var clusterName= req.body.clusterName;
    var createdDate=req.body.createdDate;
    var status= req.body.status;
    var fieldType= req.body.fieldType;
-   var user_email = req.body.user_email;
+   var user_email = req.body.email;
    console.log("user_email",user_email+"clus name",clusterName)
    console.log("createdDate",createdDate)
    console.log("status",status)
@@ -128,6 +164,47 @@ newClusterdata.save().then((cluster)=> {
   }
 })
 
+
+
+app.post('/addnode', function (req, res) {
+    console.log("Adding nodes....")
+   var nodeName= req.body.nodeName;
+   var createdDate=req.body.createdDate;
+   var status= req.body.status;
+   //var cluster_id = req.params.cluster_id; ?? coming from params
+   console.log("nodeName",nodeName)
+   console.log("createdDate",createdDate)
+   console.log("status",status)
+   //console.log("cluster_id",cluster_id)  ?? ? coming from params
+
+
+   var newNodedata = new Node({
+   node_name: req.body.nodeName,
+   created_date:req.body.createdDate,
+   status:req.body.status,
+   //?? cluster_id:req.params.cluster_id
+    
+});
+
+newNodedata.save().then((node)=> {
+    console.log("Property created : ", node);
+   // successCallback()
+    res.status(201).json({
+        data:node,
+        message: 'Node created'
+    });
+}, (err) => {
+    console.log("Error Creating node");
+    res.status(400).json({
+        message: 'Cannot create node.'
+    });
+}), function (err) {
+    console.log(err);
+    res.status(401).json({
+        message: 'connection error with db'
+    });
+  }
+})
 
 
 

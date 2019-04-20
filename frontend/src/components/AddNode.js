@@ -1,28 +1,24 @@
 import React, {Component} from 'react';
 import '../App.css';
 import axios from 'axios';
-import swal from 'sweetalert2';
 
 
-class AddCluster extends Component {
+class AddNode extends Component {
     constructor(){
         super();
         this.state= {
-            clusterName:"",
+            nodeName:"",
             createdDate:"",
             status:"",
-            fieldType:"",
-            email:""
         }
-        this.clusterNameChangeHandler = this.clusterNameChangeHandler.bind(this);
+        this.nodeNameChangeHandler = this.nodeNameChangeHandler.bind(this);
         this.dateChangeHandler = this.dateChangeHandler.bind(this);
         this.statusChangeHandler = this.statusChangeHandler.bind(this);
-        this.submitClusterData = this.submitClusterData.bind(this);
-        this.fieldTypeChangeHandler=this.fieldTypeChangeHandler.bind(this);
-        this.submitClusterDataAndAddNewNode = this.submitClusterDataAndAddNewNode.bind(this);
+        this.submitNodeData = this.submitNodeData.bind(this);
+        // ????   Do we need to create state and handler for cluster_id. FYI it's fetched from addCluster or getClusterList based on selection
     }  
-    clusterNameChangeHandler(e) {
-        this.setState({ clusterName: e.target.value });
+    nodeNameChangeHandler(e) {
+        this.setState({ NodeName: e.target.value });
         
     }
     dateChangeHandler(e) {
@@ -33,73 +29,23 @@ class AddCluster extends Component {
         this.setState({ status: e.target.value });
         
     }
-    fieldTypeChangeHandler(e) {
-        this.setState({ fieldType: e.target.value });
-        
-    }
-    componentDidMount(){
-        let id=localStorage.getItem("email_id");
-        console.log("id from local storage",id)
-        this.setState(
-            {
-                email:id
-            }
-        )
-    }
-    submitClusterData = e => {
+    
+    submitNodeData = e => {
         //prevent page from refresh
         e.preventDefault();
-        console.log("inside submit login from client side..")
-        console.log("email to be sent" ,this.state.email)
+        console.log("inside submit node data from client side..")
         const data = {
-            email:this.state.email,
-            clusterName: this.state.clusterName,
+            //????  Hardcoding the cluster_id for now
+            cluser_id:"5cb980065872562dae6c9982",
+            NodeName: this.state.NodeName,
             createdDate: this.state.createdDate,
             status: this.state.status,
-            fieldType:this.state.fieldType
         };
-        axios.post('http://localhost:3001/addcluster', data, { withCredentials: true })
+        axios.post('http://localhost:3001/addNode', data, { withCredentials: true })
             .then(response => {
                 console.log("Status Code : ", response);  
-           
-             if(response.status==201)
-             {
-                //  swal({
-                //     type: 'success',
-                //     title: 'Data saved successfully',
-                //     text: 'data saved'
-                // })
-                 window.location.href = "http://localhost:3000/dashboard";
-             }
-            });
-    }
-
-    submitClusterDataAndAddNewNode= e => {
-        //prevent page from refresh
-        e.preventDefault();
-        console.log("inside save and redirect to new node from client side..")
-        console.log("email to be sent" ,this.state.email)
-        const data = {
-            email:this.state.email,
-            clusterName: this.state.clusterName,
-            createdDate: this.state.createdDate,
-            status: this.state.status,
-            fieldType:this.state.fieldType
-        };
-
-        axios.post('http://localhost:3001/addcluster', data, { withCredentials: true })
-            .then(response => {
-                console.log("Status Code for addcluster : ", response);  
-                //now redirect to addNode page
-             });
-             //now redirect to addNode page
-        axios.post('http://localhost:3001/addnode', data, { withCredentials: true })
-            .then(response => {
-                console.log("Status Code addnode: ", response);  
-                
              });
     }
-
 
     render(){         
        return(
@@ -118,21 +64,14 @@ class AddCluster extends Component {
                   <p></p>
                   <div class="login-form md-10">
                       <div class="main-div md-10">
-                          <div align="center" style={{ fontSize: '20px' }} >New Cluster</div>
+                          <div align="center" style={{ fontSize: '20px' }} >New Node</div>
                           <div class="panel" align="left">
                           </div>
 
                           <div><input type="hidden" name="type" value="Traveler" /></div>
                           <div class="form-group">
-                              <input  onChange={this.clusterNameChangeHandler} type="text" class="form-control" name="clustername"
-                                  placeholder="Cluster  Name" required="true" />
-                          </div>
-
-                          <div class="form-group">
-                          <select id = "fieldType" class = "form-control " onChange={this.fieldTypeChangeHandler} name = "fieldType" required>
-                            <option value="RF">Ranch field</option>
-                            <option value="GF">GreenHouse Field</option>
-                          </select>
+                              <input  onChange={this.NodeNameChangeHandler} type="text" class="form-control" name="Nodename"
+                                  placeholder="Node  Name" required="true" />
                           </div>
 
                           <div class="form-group">
@@ -186,9 +125,7 @@ class AddCluster extends Component {
                             </script>
                                                           
 
-                          <button onClick={this.submitClusterData} class="btn btn-primary">Save Cluster</button>
-                          <div></div><br></br>  
-                          <button onClick={this.submitClusterDataAndAddNewNode} class="btn btn-primary">Save and Add new Node</button>
+                          <button onClick={this.submitNodeData} class="btn btn-primary">Add new Node</button>
 
                       </div>
                   </div>
@@ -200,4 +137,4 @@ class AddCluster extends Component {
        )}
 }
 
-export default AddCluster;
+export default AddNode;

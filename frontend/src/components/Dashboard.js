@@ -5,7 +5,7 @@ import axios from 'axios';
 
 class Dashboard extends Component {
     constructor(){
-       // super();
+       super();
         
     }  
    
@@ -13,7 +13,13 @@ class Dashboard extends Component {
     render(){         
        return(
         <div>
-       Dashborad page
+       Dashborad page of Insfrastructure manager
+       
+       Give three buttons over here:
+       Add Cluster
+       Add Node
+       Add Sensor
+
     </div>
        )}
 }
