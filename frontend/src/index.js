@@ -12,6 +12,7 @@ import UpdateNode from './components/UpdateNode.js';
 import Dashboard from './components/Dashboard';
 import ListFarmers from './components/ListFarmers';
 import ListClusters from './components/ListClusters';
+import SignUp from './components/SignUp';
 import reducer from './store/reducer';
 import {Provider} from 'react-redux';
 import promise from "redux-promise";
@@ -40,6 +41,7 @@ ReactDOM.render(
                 <Route path="/dashboard" component={Dashboard}/>
                 <Route path="/getFarmerList" component={ListFarmers}/>
                 <Route path="/getClusterList" component={ListClusters}/>    
+                <Route path="/register" component={SignUp}/>  
                 </div>
             </Router>
  
