@@ -9,14 +9,18 @@ class ListClusters extends Component {
     constructor(){
         super();
         this.state={
-            data:[]
+            data:[],
+            update_email:""
         }
     }  
     componentWillMount()
     {
         var self = this;
         console.log("will mount..")
-        axios.get("http://localhost:3001/getClusterList")
+        const data={
+            id:this.state.update_email
+        }
+        axios.post("http://localhost:3001/getClusterList",data)
         .then(function (response) {
             console.log("response in getClusterList",response.data.data);
          
@@ -44,8 +48,8 @@ class ListClusters extends Component {
                
             <tr>
                <td>{cluster.cluster_name}</td>      
-               <td>{cluster.location}</td>                                  
-               <td>{cluster.status}</td>                      
+               {/* <td>{cluster.location}</td>                                  
+               <td>{cluster.status}</td>                       */}
            </tr>
            </tbody>
            </table>

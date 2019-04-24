@@ -3,6 +3,8 @@ import '../App.css';
 import axios from 'axios';
 import swal from 'sweetalert2'
 import { connect } from 'react-redux';
+import {Charts} from "react-google-charts";
+
 
 class Home extends Component {
     constructor(){

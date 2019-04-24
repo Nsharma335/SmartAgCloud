@@ -133,7 +133,8 @@ app.post('/addcluster', function (req, res) {
    var status= req.body.status;
    var fieldType= req.body.fieldType;
    var user_email = req.body.email;
-   console.log("user_email",user_email+"clus name",clusterName)
+   console.log("user_email",user_email)
+  console.log( "clus name",clusterName)
    console.log("createdDate",createdDate)
    console.log("status",status)
    console.log("cluster_type",fieldType)
@@ -208,7 +209,42 @@ newNodedata.save().then((node)=> {
   }
 })
 
+app.post('/Signup', function (req, res) {
+    console.log("Registering New User...");
+        var  firstName = req.body.firstName;
+        var lastName = req.body.lastName;
+        var usertype = req.body.usertype;
+        var email = req.body.email;
+        var password = req.body.password;
 
+        console.log("email: ", email + " name: ", firstName +
+      "lastname: ", lastName + "password", password)
+
+      var newUserdata = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        role: req.body.usertype,
+        email: req.body.email,
+        phoneNumber: req.body.phoneNumber,
+      });
+      newUserdata.save().then((user)=> {
+        console.log("User created : ", user);
+        res.status(201).json({
+          data:user,
+          message: 'You are Ready to go.'
+        });
+      }, (err) => {
+        console.log("Couldn't Sign up");
+        res.status(400).json({
+          message: " Cannot create user"
+        });
+      }), function (err) {
+        console.log(err);
+        res.status(401).json({
+          message: 'connection error with db'
+        });
+      }
+})
 
 app.listen(3001, () => {
     console.log("Mongodb and backend server started");

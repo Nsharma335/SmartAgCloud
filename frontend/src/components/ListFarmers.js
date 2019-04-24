@@ -41,42 +41,12 @@ class ListFarmers extends Component {
         })
     }
 
-//     render(){ 
-//         let farmers;
-//         farmers = this.state.data.map(farmer => {        
-//        return(
-//            <div>
-//                <table>
-//                    <tbody>
-               
-//             <tr>
-//                <td>{farmer.firstName}</td>      
-//                <td>{farmer.lastName}</td>                                  
-//                <td>{farmer.email}</td>                      
-//            </tr>
-//            </tbody>
-//            </table>
-//            </div>
-//        )
-//     });
-//     if (this.state.data != null) {
-//         return (
-//             <div>
-//                     {farmers}
-//                 </div>
 
-//         )
-
-
-//     }
-
-// }
-// }
 selectFarmerEmailHandler(e)
 {
     e.preventDefault();
     localStorage.setItem('email_id',e.target.dataset.id);
-    window.location.href = "http://localhost:3000/addcluster"
+   // window.location.href = "http://localhost:3000/addcluster"
 
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import axios from 'axios';
-
+import swal from 'sweetalert2';
 
 class AddNode extends Component {
     constructor() {
@@ -39,11 +39,12 @@ class AddNode extends Component {
         const data = {
             id: email_id
         }
+        console.log("before axios request")
         axios.post('http://localhost:3001/getClusterList', data, { withCredentials: true })
             .then(response => {
                 console.log("response add node class", response);
                 console.log("cluster names in addnode class", response.data.data[0].cluster_name);
-                if (response.status == 200) {
+                if (response.status === 200) {
                     this.setState({
                         data: response.data.data
                     })
@@ -56,14 +57,27 @@ class AddNode extends Component {
         console.log("inside submit node data from client side..")
         const data = {
             //????  Hardcoding the cluster_id for now
+            //put handler and fetch id from tthere
             cluser_id: "5cb980065872562dae6c9982",
-            NodeName: this.state.NodeName,
+            nodeName: this.state.nodeName,
             createdDate: this.state.createdDate,
             status: this.state.status,
         };
         axios.post('http://localhost:3001/addNode', data, { withCredentials: true })
             .then(response => {
                 console.log("Status Code : ", response);
+                if(response.status==201)
+             {
+                 //swal('Node added successfully','node data saved','success')
+                 
+                 swal({
+                    type: 'success',
+                    title: 'Cluster saved successfully',
+                    text: 'cluster data saved',
+                    width:"280px",
+                })
+                 // window.location.href = "http://localhost:3000/dashboard";
+             }
             });
     }
 
@@ -109,8 +123,8 @@ class AddNode extends Component {
 
                                     <div><input type="hidden" name="type" value="Traveler" /></div>
                                     <div class="form-group">
-                                        <input onChange={this.NodeNameChangeHandler} type="text" class="form-control" name="nodeName"
-                                            placeholder="NodeName" required="true" />
+                                        <input onChange={this.nodeNameChangeHandler} type="text" class="form-control" name="nodeName"
+                                            placeholder="nodeName" required="true" />
                                     </div>
                                   
                                     
@@ -147,16 +161,6 @@ class AddNode extends Component {
                                         </select>
                                     </div>
 
-                                    <div id="email-error" class="error"></div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control"
-                                            name="Model" placeholder="Model" required="true" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="text" class="form-control"
-                                            name="Make" placeholder="Make" required="true" />
-                                    </div>
 
                                     <div class="form-group">
                                         <input type="text" class="form-control"
