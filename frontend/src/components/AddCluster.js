@@ -32,7 +32,7 @@ class AddCluster extends Component {
         this.submitClusterData = this.submitClusterData.bind(this);
         this.fieldTypeChangeHandler = this.fieldTypeChangeHandler.bind(this);
         this.setFarmerEmail = this.setFarmerEmail.bind(this);
-        this.setFarmerUpdateEmail = this.setFarmerUpdateEmail.bind(this);
+       // this.setFarmerUpdateEmail = this.setFarmerUpdateEmail.bind(this);
 
         this.handleClusterId = this.handleClusterId.bind(this);
         this.handleClusterName = this.handleClusterName.bind(this);
@@ -40,6 +40,7 @@ class AddCluster extends Component {
         this.handleClusterStatus = this.handleClusterStatus.bind(this);
         this.searchClusterData=this.searchClusterData.bind(this);
         this.updateClusterData=this.updateClusterData.bind(this);
+        this.deleteClusterData=this.deleteClusterData.bind(this);
         
     }
     clusterNameChangeHandler(e) {
@@ -96,27 +97,27 @@ class AddCluster extends Component {
                     }
                 });
     }
-    setFarmerUpdateEmail(e) {
-        var self = this;
-        console.log("updated email setstate", e.target.value)
-        self.setState({
-            update_email: e.target.value
-        })
-        console.log("this.state.update_email", this.state)
-        const data = {
-            id: self.state.update_email
-        }
-        axios.post("http://localhost:3001/getClusterList", data)
-            .then(function (response) {
-                console.log("response in getClusterList", response.data.data);
+    // setFarmerUpdateEmail(e) {
+    //     var self = this;
+    //     console.log("updated email setstate", e.target.value)
+    //     self.setState({
+    //         update_email: e.target.value
+    //     })
+    //     console.log("this.state.update_email", this.state)
+    //     const data = {
+    //         id: self.state.update_email
+    //     }
+    //     axios.post("http://localhost:3001/getClusterList", data)
+    //         .then(function (response) {
+    //             console.log("response in getClusterList", response.data.data);
 
-                if (response.data.data != null) {
-                    self.setState({
-                        data: response.data.data
-                    })
-                }
-            })
-    }
+    //             if (response.data.data != null) {
+    //                 self.setState({
+    //                     data: response.data.data
+    //                 })
+    //             }
+    //         })
+    // }
 
     componentWillMount() {
         var self = this;
@@ -134,7 +135,8 @@ class AddCluster extends Component {
             })
     }
  
-    searchClusterData(){
+    searchClusterData(e){
+        e.preventDefault();
      var self=this;
         const data = {
             id: this.state.uclusterID
@@ -160,6 +162,25 @@ class AddCluster extends Component {
                 }
             })
     }
+
+    
+    deleteClusterData(e){
+        e.preventDefault();
+        var self=this;
+           const data = {
+               id: this.state.uclusterID
+           }
+           console.log(data)
+           axios.post("http://localhost:3001/deleteClusterById", data)
+               .then(function (response) {
+                   console.log("response in getClusterList", response);
+   
+                   if (response.status === 200) {
+                    document.getElementById("update-result").innerHTML = "Cluster deleted successfully!";
+                    // window.location.href = "http://localhost:3000/dashboard";
+                }
+               })
+       }
 
     submitClusterData = e => {
         //prevent page from refresh
@@ -218,19 +239,19 @@ class AddCluster extends Component {
                                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="/addSensor">
                                                 <i class="fas fa-check-square"></i>Add Sensor</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="#">
                                                 <i class="fas fa-table"></i>View Sensor</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="/addCluster">
                                                 <i class="fas fa-check-square"></i>Add Cluster</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="#">
                                                 <i class="fas fa-table"></i>View Cluster</a>
                                         </li>
                                         <li>
@@ -262,29 +283,20 @@ class AddCluster extends Component {
                                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="/addCluster">
                                                 <i class="zmdi zmdi-comment-edit"></i>Cluster Management</a>
                                         </li>
+                                       
                                         <li>
-                                            <a href="table.html">
-                                                <i class="fas fa-table"></i>View Cluster</a>
-                                        </li>
-                                        <li>
-                                            <a href="/addnode">
+                                            <a href="/addNode">
                                                 <i class="zmdi zmdi-edit"></i>Node Management</a>
                                         </li>
+                                       
                                         <li>
-                                            <a href="table.html">
-                                                <i class="zmdi zmdi-view-web"></i>View Node</a>
-                                        </li>
-                                        <li>
-                                            <a href="chart.html">
+                                            <a href="/addSensor">
                                                 <i class="fas fa-plus-square"></i>Sensor Management</a>
                                         </li>
-                                        <li>
-                                            <a href="table.html">
-                                                <i class="fas fa-table"></i>View Sensor</a>
-                                        </li>
+                                       
                                         <li>
                                             <a href="form.html">
                                                 <i class="far fa-chart-bar"></i>View Reports</a>
@@ -473,7 +485,7 @@ class AddCluster extends Component {
                                                                             <input type="text" class="form-control"
                                                                                 name="Location" placeholder="location" required="true" />
                                                                         </div>
-                                                                        <button onClick={this.submitClusterData} class="btn btn-primary">Add</button>
+                                                                        <button onClick={this.submitClusterData} class="btn btn-primary">Add Cluster</button>
                                                                     </div>
 
 
@@ -510,10 +522,10 @@ class AddCluster extends Component {
                                                                         </div>
 
                                                                     </div >
-                                                                    <div class="form-group">
+                                                                  
                                                                     <button onClick={this.searchClusterData} class="btn btn-primary">Search</button>
-                                                                
-                                                                    </div>
+                                                                    
+                                                                   
                                                                 </div>
 
                                                                 <div class="form-group">
@@ -528,7 +540,7 @@ class AddCluster extends Component {
 
 
                                                                 <div class="form-group"> update cluster status
-                                                                    <select id="status" class="form-control " onChange={this.updateStatusChangeHandler} name="new_status" required>
+                                                                    <select id="status" class="form-control " onChange={this.updateStatusChangeHandler} name="new_status">
                                                                         <option value="" selected disabled hidden>Select</option>
                                                                         <option value="Active">Active</option>
                                                                         <option value="Inactive">Inactive</option>
@@ -543,9 +555,7 @@ class AddCluster extends Component {
                                                                 <button onClick={this.deleteClusterData} class="btn btn-danger">Delete</button>
                                                                 
                                                             </div>
-                                                            
-
-                                          
+                 
                                       </form>
 
 

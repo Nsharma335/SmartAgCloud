@@ -9,9 +9,14 @@ class ListSensorReadings extends Component {
         super(props);
         this.state = {
         sensor: this.props.location.state.sensor,
-        data: []
+        data: [],
+        fromDate:"",
+        toDate:"",
+
         }
-//this.filterByDate=this.filterByDate.bind(this);
+        this.filterByDate=this.filterByDate.bind(this);
+        this.fromDateHandler=this.fromDateHandler.bind(this);
+        this.toDateHandler=this.toDateHandler.bind(this);
     }
     // componentDidMount()
     // {
@@ -19,10 +24,35 @@ class ListSensorReadings extends Component {
     //   this.drawChart();
     // }
    
-    // filterByDate()
-    // {
-    //   document.getElementById("hiddenRow").hidden()
-    // }
+    fromDateHandler(e)
+    {
+    console.log(e.target.value)
+    this.setState({fromDate:e.target.value})
+    }
+    toDateHandler(e)
+    {
+        console.log(e.target.value)
+        this.setState({toDate:e.target.value})
+    }
+    filterByDate()
+    {
+        var self = this;
+        const data = {
+            start: this.state.fromDate,
+            end: this.state.toDate
+        };
+      axios.post("http://localhost:3001/filterSensorByDates",data)
+        .then(function (response) {
+            console.log("response in list cluster", response);
+
+            // if (response.data.data != null) {
+            //     self.setState({
+            //         data: response.data.data
+            //     })
+            // }
+
+        })
+    }
 
 //     somefunction(){
 //       var rows = $('table.someclass tr');
@@ -44,9 +74,9 @@ class ListSensorReadings extends Component {
     componentWillMount() {
       var self = this;
       console.log("will mount..")     
-      console.log("frontend viewing readings for sensor id :", self.state.sensor.sensor_id )     
+      console.log("frontend viewing readings for sensor id :", self.state.sensor._id )     
       const data = {
-          sensor_id :self.state.sensor.sensor_id
+          sensor_id :self.state.sensor._id,
       }
       axios.post("http://localhost:3001/getSensorReadings", data )
           .then(function (response) {
@@ -66,7 +96,7 @@ class ListSensorReadings extends Component {
   }
     render(){
 
-      const header = ["No.", "Sensor_ID","Sensor_Name", 
+      const header = ["No.","Sensor_Name", 
       "Type", "Status", "Location", "Reading","Date Created"];
      
 
@@ -86,12 +116,10 @@ class ListSensorReadings extends Component {
 
 <div class="input-daterange" id="datepicker">
     <div class="input-group">
-        <input type="date" class="input-small" name="start" />
+        <input type="date" class="input-small" onChange={this.fromDateHandler} name="fromDate" />
         <span class="input-group-addon">to</span>
-        <input type="date" class="input-small" name="end" />
-    
-
-<a class="btn btn-info" href="http://localhost:3000/getSensorReadings" role="button" onClick={this.filterByDate}>Apply Filter</a>
+        <input type="date" class="input-small" onChange={this.toDateHandler} name="toDate" />
+<a class="btn btn-info"  role="button" onClick={this.filterByDate}>Apply Filter</a>
 </div>
 </div>
        
@@ -104,8 +132,7 @@ class ListSensorReadings extends Component {
                             let sensor = this.state.data[k];
                             return (
                                 <tr key={i}>
-                                    <td>{i}</td>                                    
-                                    <td>{sensor.sensor_id}</td>
+                                    <td>{i}</td>                                                                        
                                     <td>{sensor.sensor_name}</td>                                    
                                     <td>{sensor.sensor_type}</td>
                                     <td>{sensor.sensor_status}</td>

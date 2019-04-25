@@ -8,6 +8,7 @@ import './index.css';
 import Home from './components/Home';
 import AddCluster from './components/AddCluster';
 import AddNode from './components/AddNode';
+import AddSensor from './components/AddSensor';
 import DeleteNode from './components/DeleteNode';
 import UpdateNode from './components/UpdateNode.js';
 import Dashboard from './components/Dashboard';
@@ -38,6 +39,7 @@ ReactDOM.render(
                 <Route exact path="/" component={Home}/>
                 <Route path="/addcluster" component={AddCluster}/>
                 <Route path="/addNode" component={AddNode}/>
+                <Route path="/addSensor" component={AddSensor}/>                
                 <Route path="/updateNode" component={UpdateNode}/>
                 <Route path="/deleteNode" component={DeleteNode}/>
                 <Route path="/dashboard" component={Dashboard}/>

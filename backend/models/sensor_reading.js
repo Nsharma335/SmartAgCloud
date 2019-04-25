@@ -16,7 +16,6 @@ var sensor_reading = mongoose.model('sensor_reading',{
     sensor_location : {
         type:String
     },
-
     sensor_reading : {
         type:String
     },

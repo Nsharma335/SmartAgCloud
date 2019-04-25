@@ -77,7 +77,7 @@ class ListSensors extends Component {
           }        
         // let sensors;
         // sensors = this.state.data.map(sensor => {
-        const header = ["No.", "User_ID", "Cluster_ID", "Node_ID", "Sensor_ID","Sensor_Name", 
+        const header = ["No.", "User_ID", "Cluster_ID", "Node_ID" ,"Sensor_Name", 
         "Type", "Status", "Location", "Date Created","View","Delete"];
         return (
             <div>
@@ -104,10 +104,9 @@ class ListSensors extends Component {
                             return (
                                 <tr key={i}>
                                     <td>{i}</td>
-                                    <td>{sensor.user_id}</td>
+                                    <td>{sensor.email}</td>
                                     <td>{sensor.cluster_id}</td>
-                                    <td>{sensor.node_id}</td>
-                                    <td>{sensor.sensor_id}</td>
+                                    <td>{sensor.node_id}</td>                                    
                                     <td>{sensor.sensor_name}</td>                                    
                                     <td>{sensor.sensor_type}</td>
                                     <td>{sensor.sensor_status}</td>
@@ -123,7 +122,7 @@ class ListSensors extends Component {
                                              role="button">View</Link>                                   
                                         {/* <a class="btn btn-info" role="button" onClick={this.viewSensorReadingHandler}  data-id={sensor.sensor_id}>View</a>                                         */}
                                         </td>
-                                    <td><a class="btn btn-danger" role="button" onClick={this.deleteSensorHandler}  data-id={sensor.sensor_id} >Delete</a></td>
+                                    <td><a class="btn btn-danger" role="button" onClick={this.deleteSensorHandler}  data-id={sensor._id} >Delete</a></td>
                                 </tr>
                             );
                         })}

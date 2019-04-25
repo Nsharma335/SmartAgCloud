@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var sensor_added = mongoose.model('sensor_added',{
-    user_id:{
+    email:{
         type : String
     },
     cluster_id:{
@@ -9,10 +9,7 @@ var sensor_added = mongoose.model('sensor_added',{
     },  
     node_id:{
         type : String
-    },
-    sensor_id :{
-        type : String
-    },
+    }, 
     sensor_name :{
         type : String
     },

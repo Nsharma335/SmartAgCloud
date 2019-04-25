@@ -30,6 +30,8 @@ class Addnode extends Component {
         //this.fieldTypeChangeHandler=this.fieldTypeChangeHandler.bind(this);
         this.setFarmerEmail=this.setFarmerEmail.bind(this);
         //this.setFarmerUpdateEmail=this.setFarmerUpdateEmail.bind(this);
+        this.deleteNodeData=this.deleteNodeData.bind(this);
+        this.updateNodeData=this.updateNodeData.bind(this);
     }
 
     nodeNameChangeHandler(e) {
@@ -39,7 +41,7 @@ class Addnode extends Component {
     }
     clusterIdChangeHandler(e) {
         this.setState({ cluster_id: e.target.value });
-        console.log(this.state.cluster_id)
+        console.log("cluster id: ", this.state.cluster_id)
 
     }
 
@@ -56,8 +58,19 @@ class Addnode extends Component {
         this.setState({ created_date: e.target.value });
     }
     
-
+    deleteNodeData(e)
+    {
+        e.preventDefault();
+        document.getElementById("update-result").innerHTML = "Node deleted successfully!";
+         
+    }
+    updateNodeData(e)
+    {
+        e.preventDefault();
+        document.getElementById("update-result").innerHTML = "Node updated successfully!";
+    }
     setFarmerEmail(e) {
+        e.preventDefault();
         const self = this
         self.setState({
             email: e.target.value
@@ -82,6 +95,7 @@ class Addnode extends Component {
     }
 
     setFarmerUpdateEmail(e) {
+        e.preventDefault();
         var self = this;
         console.log("updated email setstate", e.target.value)
         self.setState({
@@ -124,6 +138,8 @@ class Addnode extends Component {
         e.preventDefault();
         console.log("inside submit node from client side..")
         console.log("node to be saved", this.state.node_name)
+        console.log("at cluster_id : ", this.state.cluster_id)
+
         const data = {            
             node_name: this.state.node_name,
             cluster_id: this.state.cluster_id,
@@ -175,19 +191,19 @@ class Addnode extends Component {
                                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="/addSensor">
                                                 <i class="fas fa-check-square"></i>Add Sensor</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="#">
                                                 <i class="fas fa-table"></i>View Sensor</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="/addNode">
                                                 <i class="fas fa-check-square"></i>Add node</a>
                                         </li>
                                         <li>
-                                            <a href="chart.html">
+                                            <a href="#">
                                                 <i class="fas fa-table"></i>View node</a>
                                         </li>
                                         <li>
@@ -222,26 +238,17 @@ class Addnode extends Component {
                                             <a href="/addcluster">
                                                 <i class="zmdi zmdi-comment-edit"></i>Cluster Management</a>
                                         </li>
+                                        
                                         <li>
-                                            <a href="table.html">
-                                                <i class="fas fa-table"></i>View node</a>
-                                        </li>
-                                        <li>
-                                            <a href="addnode">
+                                            <a href="/addnode">
                                                 <i class="zmdi zmdi-edit"></i>Node Management</a>
                                         </li>
+                                       
                                         <li>
-                                            <a href="table.html">
-                                                <i class="zmdi zmdi-view-web"></i>View Node</a>
-                                        </li>
-                                        <li>
-                                            <a href="chart.html">
+                                            <a href="/addSensor">
                                                 <i class="fas fa-plus-square"></i>Sensor Management</a>
                                         </li>
-                                        <li>
-                                            <a href="table.html">
-                                                <i class="fas fa-table"></i>View Sensor</a>
-                                        </li>
+                                        
                                         <li>
                                             <a href="form.html">
                                                 <i class="far fa-chart-bar"></i>View Reports</a>
@@ -408,7 +415,7 @@ class Addnode extends Component {
 
                                                                         <div class="form-group">
                                                                             Select cluster
-                                                                                 <select value={this.state.cluster_name} onChange={this.clusterIdChangeHandler}>
+                                                                                 <select value={this.state.cluster_id} onChange={this.clusterIdChangeHandler}>
                                                                                 {this.state.data2.map((cluster) => <option key={cluster._id} value={cluster._id}>{cluster.cluster_name}</option>)}
                                                                             </select>
                                                                         </div>
@@ -429,7 +436,7 @@ class Addnode extends Component {
                                                                             <input  onChange={this.locationChangeHandler} type="text" class="form-control"
                                                                                 name="location" placeholder="location" required="true" />
                                                                         </div>
-                                                                        <button onClick={this.submitNodeData} class="btn btn-primary">Add</button>
+                                                                        <button onClick={this.submitNodeData} class="btn btn-primary">Add Node</button>
                                                                     </div>
 
 
@@ -442,6 +449,8 @@ class Addnode extends Component {
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {/* UPDATE NODE STARTS , TODO- have to change handlers and all*/}
                                             <div class="col-lg-6">
                                                 <div class="au-card recent-report">
                                                     <div class="alert alert-success" id="update-result" role="alert">
@@ -457,84 +466,63 @@ class Addnode extends Component {
 
 
                                                                         <div class="form-group">
-                                                                            Select Farmer
-      <select value={this.state.update_email} onChange={this.setFarmerUpdateEmail}>
-                                                                                <option value="" selected disabled hidden>Choose Farmer</option>
-                                                                                {this.state.data1.map((farmer) =>
-
-                                                                                    <option key={farmer.email} value={farmer.email}>{farmer.firstName}</option>)}
-                                                                            </select>
+                                                                            <input onChange={this.handleClusterId} type="text" class="form-control" name="uclusterID"
+                                                                                placeholder="Enter Node ID" required="true" />
                                                                         </div>
 
-                                                                        {/* <Listnodes update_email={this.state.update_email}></Listnodes> */}
-                                                                        {/* <TestChild pass_email={this.state.update_email}></TestChild> */}
-                                                                        <div class="form-group">
-                                                                            <input onChange={this.handleLastNameChange} type="text" class="form-control" name="lastName"
-                                                                                placeholder="Last Name" required="true" />
-                                                                        </div>
-                                                                        <div id="lname-error" class="error"></div>
-
-                                                                        <div class="form-group">
-                                                                            <select onChange={this.handleusertypeChange} id="usertype" class="form-control " name="usertype" required>
-                                                                                <option value="Farmer">Farmer</option>
-                                                                                <option value="IOT">IOT support</option>
-                                                                                <option value="manager">Infrastructure manager</option>
-                                                                            </select>
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <input onChange={this.handleEmailChange} type="email" class="form-control" name="email"
-                                                                                placeholder="Email Address" required="true" />
-                                                                        </div>
-                                                                        <div id="email-error" class="error"></div>
-
-
-                                                                        <div class="form-group">
-                                                                            <input onChange={this.handlePasswordChange} type="password" class="form-control"
-                                                                                name="password" placeholder="Password" required="true" />
-                                                                        </div>
-                                                                        <div id="password-error" class="error"></div>
-
-                                                                        <div class="form-group">
-                                                                            <input onChange={this.handlephoneNumberChange} type="number" class="form-control"
-                                                                                name="phoneNumber" placeholder="Phon Number" required="true" />
-                                                                        </div>
-                                                                        <div id="password-error" class="error"></div>
-
-                                                                        <button onClick={this.handleRegistration} class="btn btn-primary">Sign Me Up</button>
-                                                                    </div>
-
+                                                                    </div >
+                                                                  
+                                                                    <button onClick={this.searchClusterData} class="btn btn-primary">Search</button>
+                                                                    
+                                                                   
                                                                 </div>
+
+                                                                <div class="form-group">
+                                                                    <input onChange={this.handleClusterName} defaultValue={this.state.uclustername} type="text" class="form-control" name="uclustername"
+                                                                        placeholder="Node Name"  />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input onChange={this.handleClusterStatus} defaultValue={this.state.uclusterstatus} type="text" class="form-control" name="uclusterstatus"
+                                                                        placeholder="Node Status"  />
+                                                                </div>
+
+
+
+                                                                <div class="form-group"> update Node status
+                                                                    <select id="status" class="form-control " onChange={this.updateStatusChangeHandler} name="new_status">
+                                                                        <option value="" selected disabled hidden>Select</option>
+                                                                        <option value="Active">Active</option>
+                                                                        <option value="Inactive">Inactive</option>
+                                                                        <option value="Under Maintainence">Under Maintainence </option>
+                                                                        <option value="Turn On">Turn On</option>
+                                                                        <option value="Turn Off">Turn Off </option>
+
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                                <button onClick={this.updateNodeData} class="btn btn-primary">Update</button>
+                                                                <button onClick={this.deleteNodeData} class="btn btn-danger">Delete</button>
+                                                                
                                                             </div>
-                                                        </form>
+                 
+                                      </form>
 
 
 
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
+                                    </div>  
+
+{/* UPDATE NODE ENDS */}
 
 
 
-
-
-
-                                    </div>
-
-
-
-
-                                </div>
-
+  </div>
+  </div>
+  </div>
                             </div>
 
-
-
                         </div>
-
-
-
 
                     </div>
                 </div>
