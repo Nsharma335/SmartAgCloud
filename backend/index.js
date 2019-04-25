@@ -90,6 +90,39 @@ app.get('/getFarmerList', function (req, res) {
                 });
 });
 
+app.post('/getNodeList', function (req, res) {
+    var id = req.body.id
+    console.log("Get Node list  " );
+    console.log("for cluster id   " ,req.body.id);
+    Node.find({
+        cluster_id : id               
+     }  //success callback of finduser
+    ,function (err, rows) {
+                    if (err) {
+                        console.log("failure callback 1")
+                        res.status(401).json({
+                            message: 'failed to fetch'
+                        });
+                    }
+                    if (rows.length > 0) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(200).json({
+                            data:rows,
+                            message: 'data fetched'
+                        });
+                    }
+                    else {
+                        console.log("failure callback 2")
+                        res.status(400).json({
+        
+                            message: 'db access error'
+                        });
+                    }
+                  
+                });
+});
+
 app.post('/getClusterList', function (req, res) {
     var id = req.body.id
     console.log("Get Clusters list  " );
@@ -234,8 +267,7 @@ newClusterdata.save().then((cluster)=> {
 
 app.post('/addnode', function (req, res) {
     console.log("Adding nodes....")
-    
-   var node_id = req.body.node_id;
+
    var node_name= req.body.node_name;
    var cluster_id= req.body.cluster_id;
    var status= req.body.status;
@@ -243,7 +275,6 @@ app.post('/addnode', function (req, res) {
    var created_date=req.body.created_date;
    
    //var cluster_id = req.params.cluster_id; ?? coming from params
-   console.log("node_id",node_id)
    console.log("node_name",node_name)
    console.log("cluster_id",cluster_id)
    console.log("status",status)
@@ -252,7 +283,6 @@ app.post('/addnode', function (req, res) {
   
    //console.log("cluster_id",cluster_id)  ?? ? coming from params
    var newNodedata = new Node({
-    node_id : node_id,
     node_name : node_name,
     cluster_id : cluster_id,
     status :  status,
@@ -358,7 +388,8 @@ app.get('/getSensorList', function (req, res) {
 
 app.post('/getSensorReadings', function (req, res) {
     var sensor_id = req.body.sensor_id
-    console.log("Backend get readings  for sensor  :  ",req.body.sensor_id );
+    console.log("Backend get readings  for  sensor_id:  ",req.body.sensor_id);
+
     sensor_reading.find({
         sensor_id : sensor_id
      }  //success callback of finduser
@@ -392,7 +423,7 @@ app.post('/deleteSensor', function (req, res) {
     var del_sensor_id = req.body.del_sensor_id
     console.log("delete sensor backend post :  ",req.body.del_sensor_id );
     sensor_added.deleteMany({
-        sensor_id : del_sensor_id
+        _id : del_sensor_id
      }  //success callback of finduser
     ,function (err, rows) {
         console.log("error : ",err)
@@ -411,3 +442,47 @@ app.post('/deleteSensor', function (req, res) {
 });
 
 //Sandeep API Ends
+
+app.post('/addSensor', function (req, res) {
+    console.log("Adding sensor....")
+
+   var email= req.body.email;
+   var cluster_id= req.body.cluster_id;
+   var node_id = req.body.node_id;
+   var sensor_name = req.body.sensor_name;
+   var sensor_type = req.body.sensor_type;
+   var sensor_status = req.body.sensor_status;
+   var sensor_location = req.body.sensor_location;
+   var created_date=req.body.created_date;
+  
+   
+   var newSensordata = new sensor_added({
+    email : email,
+    cluster_id : cluster_id,
+    node_id : node_id,
+    sensor_name : sensor_name,
+    sensor_type : sensor_type,
+    sensor_status : sensor_status,
+    sensor_location : sensor_location,    
+    created_date : created_date
+});
+
+newSensordata.save().then((sensor)=> {
+    console.log("Property created : ", sensor);
+   // successCallback()
+    res.status(201).json({
+        data:sensor,
+        message: 'Sensor Added'
+    });
+}, (err) => {
+    console.log("Error Adding Sensor");
+    res.status(400).json({
+        message: 'Cannot add sensor.'
+    });
+}), function (err) {
+    console.log(err);
+    res.status(401).json({
+        message: 'connection error with db'
+    });
+  }
+})

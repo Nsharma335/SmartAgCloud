@@ -44,9 +44,9 @@ class ListSensorReadings extends Component {
     componentWillMount() {
       var self = this;
       console.log("will mount..")     
-      console.log("frontend viewing readings for sensor id :", self.state.sensor.sensor_id )     
+      console.log("frontend viewing readings for sensor id :", self.state.sensor._id )     
       const data = {
-          sensor_id :self.state.sensor.sensor_id
+          sensor_id :self.state.sensor._id,
       }
       axios.post("http://localhost:3001/getSensorReadings", data )
           .then(function (response) {
@@ -66,7 +66,7 @@ class ListSensorReadings extends Component {
   }
     render(){
 
-      const header = ["No.", "Sensor_ID","Sensor_Name", 
+      const header = ["No.","Sensor_Name", 
       "Type", "Status", "Location", "Reading","Date Created"];
      
 
@@ -104,8 +104,7 @@ class ListSensorReadings extends Component {
                             let sensor = this.state.data[k];
                             return (
                                 <tr key={i}>
-                                    <td>{i}</td>                                    
-                                    <td>{sensor.sensor_id}</td>
+                                    <td>{i}</td>                                                                        
                                     <td>{sensor.sensor_name}</td>                                    
                                     <td>{sensor.sensor_type}</td>
                                     <td>{sensor.sensor_status}</td>

@@ -473,7 +473,7 @@ class AddCluster extends Component {
                                                                             <input type="text" class="form-control"
                                                                                 name="Location" placeholder="location" required="true" />
                                                                         </div>
-                                                                        <button onClick={this.submitClusterData} class="btn btn-primary">Add</button>
+                                                                        <button onClick={this.submitClusterData} class="btn btn-primary">Add Cluster</button>
                                                                     </div>
 
 

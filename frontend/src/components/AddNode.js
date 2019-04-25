@@ -39,7 +39,7 @@ class Addnode extends Component {
     }
     clusterIdChangeHandler(e) {
         this.setState({ cluster_id: e.target.value });
-        console.log(this.state.cluster_id)
+        console.log("cluster id: ", this.state.cluster_id)
 
     }
 
@@ -124,6 +124,8 @@ class Addnode extends Component {
         e.preventDefault();
         console.log("inside submit node from client side..")
         console.log("node to be saved", this.state.node_name)
+        console.log("at cluster_id : ", this.state.cluster_id)
+
         const data = {            
             node_name: this.state.node_name,
             cluster_id: this.state.cluster_id,
@@ -408,7 +410,7 @@ class Addnode extends Component {
 
                                                                         <div class="form-group">
                                                                             Select cluster
-                                                                                 <select value={this.state.cluster_name} onChange={this.clusterIdChangeHandler}>
+                                                                                 <select value={this.state.cluster_id} onChange={this.clusterIdChangeHandler}>
                                                                                 {this.state.data2.map((cluster) => <option key={cluster._id} value={cluster._id}>{cluster.cluster_name}</option>)}
                                                                             </select>
                                                                         </div>
@@ -429,7 +431,7 @@ class Addnode extends Component {
                                                                             <input  onChange={this.locationChangeHandler} type="text" class="form-control"
                                                                                 name="location" placeholder="location" required="true" />
                                                                         </div>
-                                                                        <button onClick={this.submitNodeData} class="btn btn-primary">Add</button>
+                                                                        <button onClick={this.submitNodeData} class="btn btn-primary">Add Node</button>
                                                                     </div>
 
 
