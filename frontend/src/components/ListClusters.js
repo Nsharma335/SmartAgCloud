@@ -6,17 +6,18 @@ import { userInfo } from 'os';
 //select cluster_name,cluster_id(show nhi karna bus),location,status from cluster where user_email=neha@gmail.com (obviously role=farmer)
 
 class ListClusters extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state={
             data:[],
-            update_email:""
+            update_email:this.props.update_email
         }
     }  
     componentWillMount()
     {
         var self = this;
-        console.log("will mount..")
+        console.log("will mount props update_email..",this.state.update_email)
+        console.log("will mount state update_email..",this.state.update_email)
         const data={
             id:this.state.update_email
         }
@@ -44,12 +45,11 @@ class ListClusters extends Component {
        return(
            <div>
                <table>
-                   <tbody>
-               
+                   <tbody>  
             <tr>
-               <td>{cluster.cluster_name}</td>      
-               {/* <td>{cluster.location}</td>                                  
-               <td>{cluster.status}</td>                       */}
+               <td>
+               <a class="btn btn-info" role="button"  data-id={cluster.cluster_id}>{cluster.cluster_name}</a>
+                </td>   
            </tr>
            </tbody>
            </table>

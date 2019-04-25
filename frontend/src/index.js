@@ -17,7 +17,8 @@ import SignUp from './components/SignUp';
 import reducer from './store/reducer';
 import {Provider} from 'react-redux';
 import promise from "redux-promise";
-
+import ListSensors from  './components/ListSensors'
+import ListSensorReadings from './components/ListSensorReadings'
 //to work with redux dev tool
 
 const composePlugin = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -43,6 +44,8 @@ ReactDOM.render(
                 <Route path="/getFarmerList" component={ListFarmers}/>
                 <Route path="/getClusterList" component={ListClusters}/>    
                 <Route path="/register" component={SignUp}/>  
+                <Route path="/getSensorList" component={ListSensors}/>
+                <Route path="/getSensorReadings" component={ListSensorReadings}/>
                 </div>
             </Router>
  

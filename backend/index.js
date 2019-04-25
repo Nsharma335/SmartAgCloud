@@ -10,7 +10,8 @@ var { User } = require('./models/user');
 var { Cluster } = require('./models/cluster')
 var { Node } = require('./models/node')
 var { mongoose } = require('./db/mongoose');
-
+var { sensor_added } = require('./models/sensor_added')
+var { sensor_reading } = require('./models/sensor_reading')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -124,7 +125,71 @@ app.post('/getClusterList', function (req, res) {
                 });
 });
 
+app.post('/getClusterById', function (req, res) {
+    var id = req.body.id
+    console.log("Get Clusters by Id method called..  " );
+    console.log("id of cluster is  " ,id);
+    Cluster.find({
+        _id: id
+        //user_email: 'based on selected farmer from getFarmerList (previous page)' 
+        //  Here we wil pick the select cluster_id,cluster_name, location, status for a particular farmer
+     }  //success callback of finduser
+    ,function (err, rows) {
+                    if (err) {
+                        console.log("failure callback 1")
+                        res.status(401).json({
+                            message: 'failed to fetch'
+                        });
+                    }
+                    if (rows.length > 0) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(200).json({
+                            data:rows,
+                            message: 'data fetched'
+                        });
+                    }
+                    else {
+                        console.log("failure callback 2")
+                        res.status(400).json({
+        
+                            message: 'db access error'
+                        });
+                    }
+                  
+                });
+});
 
+app.post('/updateCluster', function (req, res) {
+    console.log("uclusterID in /updateCluster",req.body.uclusterID)
+    console.log("new_status in /updateCluster",req.body.new_status)
+    Cluster.findOneAndUpdate({ _id:  req.body.uclusterID},
+        {
+          $set: {
+            status: req.body.new_status,
+          }
+        },{ new: true }, function (err, result) {
+                if (result) {
+                    console.log(result);
+                    console.log("in update success block",result)
+                    res.status(200).json({
+                        data:result,
+                        message: 'data updated successfully'
+                    });
+                    //return; //this is so important if we got the result just return , dont execute below calls
+                }else if(err)
+                {
+                console.log(err, "in update failure block error data below")
+                res.status(400).json({
+                    data:rows,
+                    message: 'Failed to fetch data'
+                });
+                }
+
+            })
+        })
+
+    
 
 app.post('/addcluster', function (req, res) {
     console.log("adding clusters....")
@@ -167,26 +232,32 @@ newClusterdata.save().then((cluster)=> {
   }
 })
 
-
-
 app.post('/addnode', function (req, res) {
     console.log("Adding nodes....")
-   var nodeName= req.body.nodeName;
-   var createdDate=req.body.createdDate;
-   var status= req.body.status;
-   //var cluster_id = req.params.cluster_id; ?? coming from params
-   console.log("nodeName",nodeName)
-   console.log("createdDate",createdDate)
-   console.log("status",status)
-   //console.log("cluster_id",cluster_id)  ?? ? coming from params
-
-
-   var newNodedata = new Node({
-   node_name: req.body.nodeName,
-   created_date:req.body.createdDate,
-   status:req.body.status,
-   //?? cluster_id:req.params.cluster_id
     
+   var node_id = req.body.node_id;
+   var node_name= req.body.node_name;
+   var cluster_id= req.body.cluster_id;
+   var status= req.body.status;
+   var location= req.body.location;
+   var created_date=req.body.created_date;
+   
+   //var cluster_id = req.params.cluster_id; ?? coming from params
+   console.log("node_id",node_id)
+   console.log("node_name",node_name)
+   console.log("cluster_id",cluster_id)
+   console.log("status",status)
+   console.log("location",location)
+   console.log("created_date",created_date)
+  
+   //console.log("cluster_id",cluster_id)  ?? ? coming from params
+   var newNodedata = new Node({
+    node_id : node_id,
+    node_name : node_name,
+    cluster_id : cluster_id,
+    status :  status,
+    location : location,
+    created_date : created_date
 });
 
 newNodedata.save().then((node)=> {
@@ -250,3 +321,93 @@ app.listen(3001, () => {
     console.log("Mongodb and backend server started");
 })
 
+//Sandeep's Api
+app.get('/getSensorList', function (req, res) {
+    var  id = req.body.id
+ console.log("Get sensor list  " );
+   // console.log("id   " ,req.body.id);
+    sensor_added.find({
+        //user_id: id
+        //user_email: 'based on selected farmer from getFarmerList (previous page)' 
+        //  Here we wil pick the select cluster_id,cluster_name, location, status for a particular farmer
+     }  //success callback of finduser
+    ,function (err, rows) {
+                    if (err) {
+                        console.log("failure callback 1")
+                        res.status(401).json({
+                            message: 'failed to fetch'
+                        });
+                    }
+                    if (rows.length > 0) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(200).json({
+                            data:rows,
+                            message: 'data fetched'
+                        });
+                    }
+                    else {
+                        console.log("failure callback 2")
+                        res.status(400).json({
+                            message: 'db access error'
+                        });
+                    }
+                  
+                });
+});
+
+app.post('/getSensorReadings', function (req, res) {
+    var sensor_id = req.body.sensor_id
+    console.log("Backend get readings  for sensor  :  ",req.body.sensor_id );
+    sensor_reading.find({
+        sensor_id : sensor_id
+     }  //success callback of finduser
+    ,function (err, rows) {
+        console.log("error : ",err)
+        if (err) {
+            console.log("failure callback 1")
+            res.status(401).json({
+                message: 'failed to fetch'
+            });
+        }
+        if (rows.length > 0) {
+            console.log("rows generated",rows.length)
+            console.log("rows data",rows)
+            res.status(200).json({
+                data:rows,
+                message: 'data fetched'
+            });
+        }
+        else {
+            console.log("failure callback 2")
+            res.status(400).json({
+                message: 'db access error'
+            });
+        }
+                  
+                });
+});
+
+app.post('/deleteSensor', function (req, res) {
+    var del_sensor_id = req.body.del_sensor_id
+    console.log("delete sensor backend post :  ",req.body.del_sensor_id );
+    sensor_added.deleteMany({
+        sensor_id : del_sensor_id
+     }  //success callback of finduser
+    ,function (err, rows) {
+        console.log("error : ",err)
+                    if (err==null) {
+                        console.log("Successfully deleted record for sensor id", del_sensor_id)   
+                        res.send(200);                 
+                    }                    
+                   else {
+                        console.log("failure callback 2 sensor delete")
+                        res.status(400).json({        
+                            message: 'db access error'
+                        });
+                    }
+                  
+                });
+});
+
+//Sandeep API Ends

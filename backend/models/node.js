@@ -1,9 +1,6 @@
 var mongoose = require('mongoose');
 
 var Node = mongoose.model('Node',{
-    node_id:{
-        type : String
-    },
     node_name :{
         type : String
     },
