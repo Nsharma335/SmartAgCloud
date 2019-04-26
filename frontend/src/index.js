@@ -19,6 +19,7 @@ import reducer from './store/reducer';
 import {Provider} from 'react-redux';
 import promise from "redux-promise";
 import ListSensors from  './components/ListSensors'
+import Login from  './components/Login'
 import ListSensorReadings from './components/ListSensorReadings'
 //to work with redux dev tool
 
@@ -37,6 +38,7 @@ ReactDOM.render(
             <Router>
                 <div>
                 <Route exact path="/" component={Home}/>
+                <Route path="/login" component={Login}/>
                 <Route path="/addcluster" component={AddCluster}/>
                 <Route path="/addNode" component={AddNode}/>
                 <Route path="/addSensor" component={AddSensor}/>                

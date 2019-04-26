@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import {Charts} from "react-google-charts";
 
 
-class Home extends Component {
+class Login extends Component {
     constructor(){
         super();
         
@@ -67,52 +67,42 @@ class Home extends Component {
     render(){         
         return(
             <div>
-            <div>
-            <header class="header bg-success">
+                   <div>
+              <div class = "jumbotron  jumbotron-fluid p-3 mb-2 bg-success text-white" style={{background: '#32CD32'}}>
+                <div class = "container">
+                    <h1 class ="h1 text-center"style= {{color:"white"  }}>SmartAgro</h1>
+                    <p class = "lead text-center" style= {{color:"white"}} >Be Smarter be Effective</p>
+                </div>
+              </div>
 
 
-              </header>
-              <div class="main-content bg-success" >
-                <div class="section__content section__content--p30">
-                  `<div class="container-fluid">`
-                          <div class="row">
+              <form method="post">
 
-                              <div class="col-md-12 col-lg-6">
-                                  <div class="overview-wrap text">
-                                      <h1 class="h1 text-white" align="center" style= {{marginLeft: "20%", marginTop: "10%", fontSize:"70px"}}>
-                                        SmartAgro
-                                        <h2 class="h2 text-white" align="center" style= {{ fontSize:"30px"}} >
-                                          Be Smart Be Effective
-                                        </h2>
-                                      </h1>
-                                  </div>
+                  <div class="container col-md-8">
+                      <p></p>
+                      <div class="login-form">
+                          <div class="main-div">
+                              <div align="center" style={{ fontSize: '20px' }}>Log in</div>
+                              <div class="panel" align="left">
                               </div>
-
-                              <div class="col-md-12 col-lg-6">
-                                  <div class="overview-wrap text">
-                                  <button class="au-btn au-btn-icon au-btn--green"style= {{ marginTop: "20%",marginRight:"0%"}}>
-                                    <a role ="button" href="/login" class="zmdi zmdi-account">Login</a>
-                                  </button>
-                                  <button class="au-btn au-btn-icon au-btn--green"style= {{marginTop: "20%"}}>
-                                    <a role ="button" href="/register" class="zmdi zmdi-account-add">Sign Up</a>
-                                  </button>
-                                  </div>
+                              <div><input type="hidden" name="type" value="Traveler" /></div>
+                              <div class="form-group">
+                                  <input onChange={this.emailChangeHandler} type="text" class="form-control" name="email"
+                                      placeholder="Email address" required="true" />
                               </div>
-
-
-
+                              <div id="email-error" class="error"></div>
+                              <div class="form-group">
+                                  <input onChange={this.passwordChangeHandler} type="password" class="form-control" name="password" placeholder="Password" required="true" />
+                              </div>
+                              <div id="password-error" class="error"></div>
+                              <button onClick={this.submitLogin} class="btn btn-primary">Log In</button>
+                              <p align="center">Need an account?<a href="/register" style={{ color: '#007bff' }}>&nbsp;&nbsp;&nbsp;Sign Up</a></p>
                           </div>
-                        </div>
                       </div>
-                    </div>
-
-
-
-
-
-
+                  </div>
+              </form>
             </div>
-          </div>
+            </div> 
         )
     }
 }
@@ -157,4 +147,4 @@ const mapDispatchStateToProps = dispatch => {
     }
 }
 
-export default connect(null,mapDispatchStateToProps)(Home);
+export default connect(null,mapDispatchStateToProps)(Login);

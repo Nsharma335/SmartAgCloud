@@ -45,11 +45,11 @@ class ListSensorReadings extends Component {
         .then(function (response) {
             console.log("response in list cluster", response);
 
-            // if (response.data.data != null) {
-            //     self.setState({
-            //         data: response.data.data
-            //     })
-            // }
+            if (response.data.data != null) {
+                self.setState({
+                    data: response.data.data
+                })
+            }
 
         })
     }

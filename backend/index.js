@@ -518,13 +518,13 @@ newSensordata.save().then((sensor)=> {
 app.post('/filterSensorByDates', function (req, res){
     console.log("API /filterSensorByDates called.." ,req.body)
     sensor_reading.find({
-    created_date :{ $lte: req.body.start},
-    created_date : {$gte: req.body.end} 
+    created_date :{ $lte: req.body.end,$gte: req.body.start} 
     },function (err,result) {
             if (result) {
                 console.log("successCallback callback 1")
                 console.log("rows generated are" + result)
-                res.status(200).json({        
+                res.status(200).json({    
+                    data:result,    
                     message: 'data filtered and new rows generated'
                 });
             }

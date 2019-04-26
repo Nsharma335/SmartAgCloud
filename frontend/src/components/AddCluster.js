@@ -199,6 +199,7 @@ class AddCluster extends Component {
                 console.log("Status Code : ", response);
 
                 if (response.status == 201) {
+                    
                     document.getElementById("success-result").innerHTML = "New Cluster Added!";
                     // window.location.href = "http://localhost:3000/dashboard";
                 }
