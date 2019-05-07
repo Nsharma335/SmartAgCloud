@@ -57,9 +57,9 @@ class mdb_conn_update ():
                      H_sense.update_sensor()
                      sensor_reading = H_sense.read_sensor()
      
-                  collection_reading.insert_one({"sensor_id": sensor_id,"sensor_name": docs["sensor_name"],"sensor_type": docs["sensor_type"],"sensor_status": docs["sensor_status"],"sensor_location": docs["sensor_location"],"sensor_reading": sensor_reading,"created_date" : dt.datetime.now()})
+                  collection_reading.insert_one({"sensor_id": sensor_id,"sensor_name": docs["sensor_name"],"sensor_type": docs["sensor_type"],"sensor_status": docs["sensor_status"],"sensor_location": docs["sensor_location"],"sensor_reading": sensor_reading,"created_date" : time.strftime("%Y-%m-%d %H:%M:%S")})
               time.sleep( refresh_rate )
           connection.close()
           
 DB_update = mdb_conn_update('config.yaml')
-DB_update.sensor_reading_update() 
+DB_update.sensor_reading_update()
