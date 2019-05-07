@@ -23,6 +23,18 @@ import Login from  './components/Login'
 import ListSensorReadings from './components/ListSensorReadings'
 //to work with redux dev tool
 
+import './vendor/font-awesome-4.7/css/font-awesome.min.css';
+import './vendor/font-awesome-5/css/fontawesome-all.min.css';
+import './vendor/mdi-font/css/material-design-iconic-font.min.css';
+import './vendor/bootstrap-4.1/bootstrap.min.css';
+import './vendor/animsition/animsition.min.css';
+import './vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css';
+import './vendor/wow/animate.css';
+import './vendor/css-hamburgers/hamburgers.min.css';
+import './vendor/slick/slick.css';
+import './vendor/perfect-scrollbar/perfect-scrollbar.css';
+import './vendor/select2/select2.min.css';
+
 const composePlugin = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 //import createStore from redux
@@ -34,25 +46,26 @@ const store = createStore(reducer, composePlugin(applyMiddleware(promise)));
 
 ReactDOM.render(
     <Provider store = {store}>
-       
+
             <Router>
                 <div>
                 <Route exact path="/" component={Home}/>
                 <Route path="/login" component={Login}/>
+                <Route path="/signup" component={SignUp}/>
                 <Route path="/addcluster" component={AddCluster}/>
                 <Route path="/addNode" component={AddNode}/>
-                <Route path="/addSensor" component={AddSensor}/>                
+                <Route path="/addSensor" component={AddSensor}/>
                 <Route path="/updateNode" component={UpdateNode}/>
                 <Route path="/deleteNode" component={DeleteNode}/>
                 <Route path="/dashboard" component={Dashboard}/>
                 <Route path="/getFarmerList" component={ListFarmers}/>
-                <Route path="/getClusterList" component={ListClusters}/>    
-                <Route path="/register" component={SignUp}/>  
+                <Route path="/getClusterList" component={ListClusters}/>
+                <Route path="/register" component={SignUp}/>
                 <Route path="/getSensorList" component={ListSensors}/>
                 <Route path="/getSensorReadings" component={ListSensorReadings}/>
                 </div>
             </Router>
- 
+
     </Provider>
     ,
     document.getElementById('root')

@@ -5,14 +5,48 @@ import '../theme.css'
 import Chart from 'react-google-charts';
 import LiquidFillGauge from 'react-liquid-gauge';
 import Moisture from'./Moisture';
+<<<<<<< HEAD
 import ListFarmers from './ListFarmers';
+=======
+import ListFarmers from './ListFarmers'
+>>>>>>> 4da2bbbc0b2bd120c5cfb6e0aea8c80b550e0ff9
 //npmimport '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 class Dashboard extends Component {
-    constructor(){
-        super();
+  constructor(){
+    super();
+    this.state={
+         data:[],
+         email:"",
+         size:""
+     }
 
-    }
+
+}
+
+
+
+
+componentWillMount() {
+var self = this;
+console.log("will mount sensor data.")
+
+axios.post("http://localhost:3001/getSensorReadings")
+    .then(function (response) {
+        console.log("response in getSensorList", response.data.data);
+
+        if (response.data.data != null) {
+            self.setState({
+                data: response.data.data.slice(-5)
+            })
+        }
+        if (response.status === 204) {
+            console.log("No sensor readings found for this sensor");
+            console.log("data" + response.data.status)
+            return
+        }
+    })
+}
     // componentDidMount()
     // {
     //   console.log("in will mount...")
@@ -21,6 +55,8 @@ class Dashboard extends Component {
 
 
     render(){
+      const header = ["Sensor_Name",
+  "Type", "Status", "Reading","Date Created"];
        return(
         <div>
 
@@ -352,82 +388,24 @@ class Dashboard extends Component {
                                 <h2 class="title-1 m-b-25 text success">Sensor Data</h2>
                                 <div class="table-responsive table--no-card m-b-40">
                                     <table class="table table-borderless table-striped table-earning">
-                                        <thead>
-                                            <tr>
-                                                <th>date</th>
-                                                <th>Sensor ID</th>
-                                                <th>name</th>
-                                                <th class="text-right">price</th>
-                                                <th class="text-right">quantity</th>
-                                                <th class="text-right">total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>2018-09-29 05:57</td>
-                                                <td>100398</td>
-                                                <td>iPhone X 64Gb Grey</td>
-                                                <td class="text-right">$999.00</td>
-                                                <td class="text-right">1</td>
-                                                <td class="text-right">$999.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018-09-28 01:22</td>
-                                                <td>100397</td>
-                                                <td>Samsung S8 Black</td>
-                                                <td class="text-right">$756.00</td>
-                                                <td class="text-right">1</td>
-                                                <td class="text-right">$756.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018-09-27 02:12</td>
-                                                <td>100396</td>
-                                                <td>Game Console Controller</td>
-                                                <td class="text-right">$22.00</td>
-                                                <td class="text-right">2</td>
-                                                <td class="text-right">$44.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018-09-26 23:06</td>
-                                                <td>100395</td>
-                                                <td>iPhone X 256Gb Black</td>
-                                                <td class="text-right">$1199.00</td>
-                                                <td class="text-right">1</td>
-                                                <td class="text-right">$1199.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018-09-25 19:03</td>
-                                                <td>100393</td>
-                                                <td>USB 3.0 Cable</td>
-                                                <td class="text-right">$10.00</td>
-                                                <td class="text-right">3</td>
-                                                <td class="text-right">$30.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018-09-29 05:57</td>
-                                                <td>100392</td>
-                                                <td>Smartwatch 4.0 LTE Wifi</td>
-                                                <td class="text-right">$199.00</td>
-                                                <td class="text-right">6</td>
-                                                <td class="text-right">$1494.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018-09-24 19:10</td>
-                                                <td>100391</td>
-                                                <td>Camera C430W 4k</td>
-                                                <td class="text-right">$699.00</td>
-                                                <td class="text-right">1</td>
-                                                <td class="text-right">$699.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2018-09-22 00:43</td>
-                                                <td>100393</td>
-                                                <td>USB 3.0 Cable</td>
-                                                <td class="text-right">$10.00</td>
-                                                <td class="text-right">3</td>
-                                                <td class="text-right">$30.00</td>
-                                            </tr>
-                                        </tbody>
+                                    <thead class="thead-dark">
+                                        <tr>{header.map((h, i) => <th scope="col" key={i}>{h}</th>)}</tr>
+                                    </thead>
+                                    <tbody>
+                                        {Object.keys(this.state.data).map((k, i) => {
+                                            let sensor = this.state.data[k];
+                                            return (
+                                                <tr key={i}>
+
+                                                    <td>{sensor.sensor_name}</td>
+                                                    <td>{sensor.sensor_type}</td>
+                                                    <td>{sensor.sensor_status}</td>
+                                                    <td>{sensor.sensor_reading}</td>
+                                                    <td>{sensor.created_date}</td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -436,8 +414,16 @@ class Dashboard extends Component {
                                 <div class="au-card au-card--bg-blue au-card-top-countries m-b-40">
                                     <div class="au-card-inner">
                                         <div class="table-responsive">
+<<<<<<< HEAD
                                         <ListFarmers></ListFarmers>
                                             
+=======
+                                            <table class="table table-top-countries">
+                                              <tbody>
+                                                <ListFarmers></ListFarmers>
+                                              </tbody>
+                                            </table>
+>>>>>>> 4da2bbbc0b2bd120c5cfb6e0aea8c80b550e0ff9
                                         </div>
                                     </div>
                                 </div>
