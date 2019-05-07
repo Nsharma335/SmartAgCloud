@@ -9,17 +9,17 @@ import {Charts} from "react-google-charts";
 class Home extends Component {
     constructor(){
         super();
-        
+
         this.state = {
             email: "",
             password: "",
-            
+
         };
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.emailChangeHandler = this.emailChangeHandler.bind(this);
         this.submitLogin = this.submitLogin.bind(this);
-    }  
-  
+    }
+
     emailChangeHandler(e) {
 
         this.setState({ email: e.target.value });
@@ -64,7 +64,7 @@ class Home extends Component {
         this.props.onSubmitHandle(data);
     }
 
-    render(){         
+    render(){
         return(
             <div>
             <div>
@@ -89,15 +89,19 @@ class Home extends Component {
                               </div>
 
                               <div class="col-md-12 col-lg-6">
-                                  <div class="overview-wrap text">
-                                  <button class="au-btn au-btn-icon au-btn--green"style= {{ marginTop: "20%",marginRight:"0%"}}>
-                                    <a role ="button" href="/login" class="zmdi zmdi-account">Login</a>
-                                  </button>
-                                  <button class="au-btn au-btn-icon au-btn--green"style= {{marginTop: "20%"}}>
-                                    <a role ="button" href="/register" class="zmdi zmdi-account-add">Sign Up</a>
-                                  </button>
-                                  </div>
-                              </div>
+      <div class="overview-wrap text">
+      <button class="au-btn au-btn-icon au-btn--green"style= {{ marginTop: "20%",marginRight:"0%"}}>
+        <a class="accordion-toggle btn-block text-white: " href ="/login" style={{color: "white"}}>
+          <i class="zmdi zmdi-account"></i>Login
+        </a>
+      </button>
+      <button class="au-btn au-btn-icon au-btn--green"style= {{marginTop: "20%"}} >
+      <a href ="/signup" style={{color: "white"}}>
+        <i class="zmdi zmdi-account-add"></i>Sign Up
+      </a>
+      </button>
+      </div>
+  </div>
 
 
 
@@ -148,10 +152,10 @@ const mapDispatchStateToProps = dispatch => {
                                 //     text: 'You entered invalid credentials or your email not registered!'
                                 // })
                                 window.location.href = "http://localhost:3000/dashboard";
-                            } 
+                            }
                         console.log("response fetched..", response.data.resData)
                         dispatch({type: 'USER_INFO',payload :response.data.updatedList, statusCode : response.status})
-                      
+
             })
         }
     }

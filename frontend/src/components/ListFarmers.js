@@ -13,7 +13,7 @@ class ListFarmers extends Component {
             email:""
         }
         this.setEmail=this.setEmail.bind(this);
-    }  
+    }
     componentWillMount()
     {
         var self = this;
@@ -21,10 +21,10 @@ class ListFarmers extends Component {
         axios.get("http://localhost:3001/getFarmerList")
         .then(function (response) {
             console.log("response in listfarmer",response.data.data);
-         
+
             if (response.data.data != null) {
                 self.setState({
-                    data: response.data.data
+                    data: response.data.data.slice(-5)
                 })
             }
             if (response.status === 204) {
@@ -52,7 +52,7 @@ selectFarmerEmailHandler(e)
 
 render(){
     let farmers;
-     farmers = this.state.data.map(farmer => {  
+     farmers = this.state.data.map(farmer => {
 return(
     <div>
 <div className="container">
@@ -61,11 +61,12 @@ return(
 
       <form>
           <div>
-              <a href='#' onClick={this.selectFarmerEmailHandler} data-id={farmer.email}> {farmer.firstName} {farmer.lastName}</a>
+            <tbody><tr><td href='#' onClick={this.selectFarmerEmailHandler} data-id={farmer.email}> {farmer.firstName} {farmer.lastName}</td></tr>
+            </tbody>
           </div>
         {/* {<div className="radio">
           <label>
-          <input type="radio" value={farmer.email} 
+          <input type="radio" value={farmer.email}
           name="gh" checked={this.state.email} onClick={this.setEmail}/>
             {farmer.email} ,{farmer.firstName} {farmer.lastName}
           </label>
@@ -79,16 +80,16 @@ return(
 
 )
      });
-     
+
      if (this.state.data != null) {
                 return (
-                    <div> Farmer List
+                    <div>
                             {farmers}
                     </div>
-        
+
                 )
-        
-        
+
+
             }
 }
 }

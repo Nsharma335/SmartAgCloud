@@ -12,6 +12,9 @@ export default class Moisture extends Component {
     endColor = '#dc143c'; // crimson
 
     render() {
+        var min = 40;
+        var max = 98;
+        var rand = min + (Math.random() * (max-min));
         const radius = 200;
         const interpolate = interpolateRgb(this.startColor, this.endColor);
         const fillColor = interpolate(this.state.value / 100);
@@ -99,7 +102,7 @@ export default class Moisture extends Component {
                         type="button"
                         className="btn btn-default btn-block"
                         onClick={() => {
-                            this.setState({ value: Math.random() * 100 });
+                            this.setState({ value: rand });
                         }}
                     >
                         Refresh

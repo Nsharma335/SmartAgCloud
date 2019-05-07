@@ -73,10 +73,10 @@ export default class SignUp extends Component {
 
     handleRegistration(e) {
         e.preventDefault();
-        const data = { firstName: this.state.firstName, 
+        const data = { firstName: this.state.firstName,
             lastName: this.state.lastName,
              email: this.state.email,
-          password: this.state.password, 
+          password: this.state.password,
           usertype: this.state.usertype,
            phoneNumber: this.state.phoneNumber };
 
@@ -157,7 +157,7 @@ export default class SignUp extends Component {
 
                                 <div class="form-group">
                                     <input onChange={this.handlephoneNumberChange} type="number" class="form-control"
-                                    name="phoneNumber" placeholder="Phon Number" required="true" />
+                                    name="phoneNumber" placeholder="Phone Number" required="true" />
                                 </div>
                                 <div id="password-error" class="error"></div>
 
@@ -173,4 +173,3 @@ export default class SignUp extends Component {
         )
     }
 }
-
