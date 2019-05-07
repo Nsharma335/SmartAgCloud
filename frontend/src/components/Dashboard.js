@@ -5,6 +5,7 @@ import '../theme.css'
 import Chart from 'react-google-charts';
 import LiquidFillGauge from 'react-liquid-gauge';
 import Moisture from'./Moisture';
+import ListFarmers from './ListFarmers';
 //npmimport '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 class Dashboard extends Component {
@@ -435,42 +436,8 @@ class Dashboard extends Component {
                                 <div class="au-card au-card--bg-blue au-card-top-countries m-b-40">
                                     <div class="au-card-inner">
                                         <div class="table-responsive">
-                                            <table class="table table-top-countries">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>United States</td>
-                                                        <td class="text-right">$119,366.96</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Australia</td>
-                                                        <td class="text-right">$70,261.65</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>United Kingdom</td>
-                                                        <td class="text-right">$46,399.22</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Turkey</td>
-                                                        <td class="text-right">$35,364.90</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Germany</td>
-                                                        <td class="text-right">$20,366.96</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>France</td>
-                                                        <td class="text-right">$10,366.96</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Australia</td>
-                                                        <td class="text-right">$5,366.96</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Italy</td>
-                                                        <td class="text-right">$1639.32</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                        <ListFarmers></ListFarmers>
+                                            
                                         </div>
                                     </div>
                                 </div>
