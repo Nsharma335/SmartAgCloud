@@ -15,7 +15,7 @@ class Temperature_sensor_sim ():
 
       def update_sensor(self):
           total_time_elapsed = (dt.datetime.now() - self.start_sensor).seconds
-          amplitude_distortion = np.random.randint(1,99)
+          amplitude_distortion = np.random.randint(1,50)
           self.sensor_output = 60 - (abs(amplitude_distortion * 1e14) * np.sin(np.pi * float(total_time_elapsed))/0.37)
           #self.sensor_output = sensor_output/120
 
