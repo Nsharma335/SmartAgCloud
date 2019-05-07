@@ -91,33 +91,14 @@ class AddCluster extends Component {
         axios.post('http://localhost:3001/updateCluster', data)
                 .then(response => {
                     console.log("Status Code : ", response);
+                    
                     if (response.status == 200) {
                         document.getElementById("update-result").innerHTML = "Cluster updated successfully!";
                         // window.location.href = "http://localhost:3000/dashboard";
                     }
+                    
                 });
     }
-    // setFarmerUpdateEmail(e) {
-    //     var self = this;
-    //     console.log("updated email setstate", e.target.value)
-    //     self.setState({
-    //         update_email: e.target.value
-    //     })
-    //     console.log("this.state.update_email", this.state)
-    //     const data = {
-    //         id: self.state.update_email
-    //     }
-    //     axios.post("http://localhost:3001/getClusterList", data)
-    //         .then(function (response) {
-    //             console.log("response in getClusterList", response.data.data);
-
-    //             if (response.data.data != null) {
-    //                 self.setState({
-    //                     data: response.data.data
-    //                 })
-    //             }
-    //         })
-    // }
 
     componentWillMount() {
         var self = this;
@@ -142,24 +123,30 @@ class AddCluster extends Component {
             id: this.state.uclusterID
         }
         console.log(data)
-        axios.post("http://localhost:3001/getClusterById", data)
+        axios.post("http://localhost:3001/getClusterById", data ,{ withCredentials: true })
             .then(function (response) {
-                console.log("response in getClusterList", response.data.data[0].status);
-
-                if (response.data.data != null) {
+                console.log("response",response)
+                //.log("response in getClusterList", response.data.data[0].status);
+                if (response.data.data.length == 0) {
+                    document.getElementById("update-result").innerHTML = "Cluster not found!";
+                    self.setState({
+                        uclustername: "",
+                        uclusterstatus: ""
+                    })
+                    // window.location.href = "http://localhost:3000/dashboard";
+                }
+                if (response.status == 400) {
+                    document.getElementById("update-result").innerHTML = "Cluster not found!";
+                    // window.location.href = "http://localhost:3000/dashboard";
+                }
+                if (response.data.data.length != 0) {
                     self.setState({
                         uclustername: response.data.data[0].cluster_name,
                         uclusterstatus: response.data.data[0].status
                     })
-                    // self.setState({
-                    //     uclusterstatus: response.data.data.cluster_status
-                    // })
+                  
                 }
-                if (response.status === 204) {
-                    console.log("No cluster found for this farmer");
-                    console.log("data" + response.data.status)
-                    return
-                }
+               
             })
     }
 
@@ -200,7 +187,7 @@ class AddCluster extends Component {
 
                 if (response.status == 201) {
                     
-                    document.getElementById("success-result").innerHTML = "New Cluster Added!";
+                    document.getElementById("success-result").innerHTML = "New Cluster Added! Please note the Id for future reference.<br>"+response.data.data._id;
                     // window.location.href = "http://localhost:3000/dashboard";
                 }
             });
@@ -381,7 +368,7 @@ class AddCluster extends Component {
                                 <div class="section__content section__content--p30">
                                     <div class="container-fluid">
                                         <div class="row m-t-25">
-                                            <div class="col-sm-6 col-lg-6">
+                                            <div class="col-sm-4 col-lg-4">
                                                 <div class="overview-item overview-item--c1">
                                                     <div class="overview__inner">
                                                         <div class="overview-box clearfix">
@@ -389,8 +376,8 @@ class AddCluster extends Component {
                                                                 <i class="zmdi zmdi-input-antenna"></i>
                                                             </div>
                                                             <div class="text">
-                                                                <h2>10368</h2>
-                                                                <span>Number of Sensors</span>
+                                                                <h2>Add Your Cluster Below</h2>
+                 
                                                             </div>
                                                         </div>
                                                         <div class="overview-chart">
@@ -399,7 +386,7 @@ class AddCluster extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-lg-6">
+                                            <div class="col-sm-6 col-lg-4">
                                                 <div class="overview-item overview-item--c2">
                                                     <div class="overview__inner">
                                                         <div class="overview-box clearfix">
@@ -407,8 +394,8 @@ class AddCluster extends Component {
                                                                 <i class="zmdi zmdi-portable-wifi-changes"></i>
                                                             </div>
                                                             <div class="text">
-                                                                <h2>9237</h2>
-                                                                <span>Active Sensors</span>
+                                                                <h2>Update Cluster Info</h2>
+                                                               
                                                             </div>
                                                         </div>
                                                         <div class="overview-chart">
@@ -424,7 +411,7 @@ class AddCluster extends Component {
                                         {/* ADD CLUSTER STARTS  */}
 
                                         <div class="row">
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-4">
                                                 <div class="au-card recent-report">
 
                                                     <div class="alert alert-success" id="success-result" role="alert">
@@ -462,9 +449,11 @@ class AddCluster extends Component {
           </div> */}
 
                                                                         <div class="form-group">
-                                                                            Select Farmer
-      <select value={this.state.email} onChange={this.setFarmerEmail}>
-                                                                                {this.state.data.map((farmer) => <option key={farmer.email} value={farmer.email}>{farmer.firstName}</option>)}
+                                                                           
+                                                                                <select value={this.state.email} onChange={this.setFarmerEmail}>
+                                                                                <option  value="">Choose farmer</option>
+                                                                                {this.state.data.map((farmer) => 
+                                                                                <option key={farmer.email} value={farmer.email}>{farmer.firstName}</option>)}
                                                                             </select>
                                                                         </div>
 
@@ -503,7 +492,7 @@ class AddCluster extends Component {
 
 
                                             {/* UPDATE CLUSTER STARTS OLD */}
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-4">
                                                 <div class="au-card recent-report">
                                                     <div class="alert alert-success" id="update-result" role="alert">
                                                     </div>

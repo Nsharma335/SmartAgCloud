@@ -5,7 +5,7 @@ import '../theme.css'
 import Chart from 'react-google-charts';
 import LiquidFillGauge from 'react-liquid-gauge';
 import Moisture from './Moisture';
-
+//import App1 from './GoogleMaps/App1';
 //npmimport '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 class AddSensor extends Component {
@@ -22,7 +22,11 @@ class AddSensor extends Component {
             created_date: "",
             data1: [],
             data2: [],
-            data3: []
+            data3: [],
+            usensorID:"",
+            usensorname: "",
+            usensorstatus: "",
+            new_status:""
         }    
         this.sensorNameChangeHandler = this.sensorNameChangeHandler.bind(this);       
         this.sensorTypeChangeHandler = this.sensorTypeChangeHandler.bind(this);     
@@ -38,18 +42,40 @@ class AddSensor extends Component {
         //this.setFarmerUpdateEmail=this.setFarmerUpdateEmail.bind(this);
         this.updateSensorData=this.updateSensorData.bind(this);
         this.deleteSensorData=this.deleteSensorData.bind(this);
+        this.searchSensorById=this.searchSensorById.bind(this);
+        this.handleSensorId=this.handleSensorId.bind(this);
+        this.handleSensorName=this.handleSensorName.bind(this);
+        this.handleSensorStatus=this.handleSensorStatus.bind(this);
+        this.updateStatusChangeHandler=this.updateStatusChangeHandler.bind(this);
     }
 
     sensorTypeChangeHandler(e) {
         this.setState({ sensor_type: e.target.value });
         console.log(this.state.sensor_type)
     }
-    
+    updateStatusChangeHandler(e)
+    {
+        this.setState({ new_status: e.target.value });
+    }
     sensorNameChangeHandler(e) {
         this.setState({ sensor_name: e.target.value });
         console.log(this.state.sensor_name)
     }
-
+    handleSensorId(e)
+    {
+        this.setState({ usensorID: e.target.value });
+        console.log(this.state.usensorID)
+    }
+    handleSensorName(e)
+    {
+        this.setState({ usensorname: e.target.value });
+        console.log(this.state.usensorname)
+    }
+    handleSensorStatus(e)
+    {
+        this.setState({ usensorstatus: e.target.value });
+        console.log(this.state.usensorstatus)
+    }
     nodeIdChangeHandler(e) {
         const self = this
         self.setState({
@@ -77,13 +103,40 @@ class AddSensor extends Component {
     deleteSensorData(e)
     {
         e.preventDefault();
-        document.getElementById("update-result").innerHTML = "Node deleted successfully!";
+        var self=this;
+           const data = {
+               id: this.state.usensorID
+           }
+           console.log(data)
+           axios.post("http://localhost:3001/deleteSensorById", data)
+               .then(function (response) {
+                   console.log("response in getClusterList", response);
+   
+                   if (response.status === 200) {
+                    document.getElementById("update-result").innerHTML = "Sensor deleted successfully!";
+                    // window.location.href = "http://localhost:3000/dashboard";
+                }
+               })
          
     }
     updateSensorData(e)
     {
         e.preventDefault();
-        document.getElementById("update-result").innerHTML = "Node updated successfully!";
+        const data={
+            
+            usensorID:this.state.usensorID,
+            new_status:this.state.new_status,
+        }
+        axios.post('http://localhost:3001/updateSensor', data)
+                .then(response => {
+                    console.log("Status Code : ", response);
+                    
+                    if (response.status == 200) {
+                        document.getElementById("update-result").innerHTML = "Sensor updated successfully!";
+                        // window.location.href = "http://localhost:3000/dashboard";
+                    }
+                    
+                });
     }
 
     setFarmerEmail(e) {
@@ -110,7 +163,40 @@ class AddSensor extends Component {
 
         })
     }
-
+    searchSensorById(e)
+    {
+        e.preventDefault();
+        var self=this;
+           const data = {
+               id: this.state.usensorID
+           }
+           console.log(data)
+           axios.post("http://localhost:3001/getSensorById", data ,{ withCredentials: true })
+               .then(function (response) {
+                   console.log("response",response)
+                   //.log("response in getClusterList", response.data.data[0].status);
+                   if (response.data.data.length == 0) {
+                       document.getElementById("update-result").innerHTML = "Sensor not found!";
+                       self.setState({
+                           usensorname: "",
+                           usensorstatus: ""
+                       })
+                       // window.location.href = "http://localhost:3000/dashboard";
+                   }
+                   if (response.status == 400) {
+                       document.getElementById("update-result").innerHTML = "Sensor not found!";
+                       // window.location.href = "http://localhost:3000/dashboard";
+                   }
+                   if (response.data.data.length != 0) {
+                       self.setState({
+                        usensorname: response.data.data[0].sensor_name,
+                        usensorstatus: response.data.data[0].sensor_status
+                       })
+                     
+                   }
+                  
+               })
+    }
     setFarmerNodeId(e){  
         e.preventDefault();
         var self = this
@@ -194,7 +280,7 @@ class AddSensor extends Component {
                 console.log("Status Code : ", response);
 
                 if (response.status == 201) {
-                    document.getElementById("success-result").innerHTML = "New Sensor Added!";
+                    document.getElementById("success-result").innerHTML = "New Sensor Added!Please note the Id for future reference.<br>"+response.data.data._id;
                     // window.location.href = "http://localhost:3000/dashboard";
                 }
             });
@@ -459,24 +545,26 @@ class AddSensor extends Component {
           </div> */}
 
                                                                         <div class="form-group">
-                                                                            Select Farmer
+                                                                            
                                                                                  <select value={this.state.email} onChange={this.setFarmerEmail}>
+                                                                                 <option  value="">Choose farmer</option>
                                                                                 {this.state.data1.map((farmer) => <option key={farmer.email} value={farmer.email}>{farmer.firstName}</option>)}
                                                                             </select>
                                                                         </div>
 
 
                                                                         <div class="form-group">
-                                                                            Select Cluster
+                                                                            
                                                                                  <select value={this.state.cluster_name} onChange={this.setFarmerNodeId}>
+                                                                                 <option  value="">Choose Cluster</option>
                                                                                 {this.state.data2.map((cluster) => <option key={cluster._id} value={cluster._id}>{cluster.cluster_name}</option>)}
                                                                             </select>
                                                                         </div>
 
 
                                                                         <div class="form-group">
-                                                                            Select Node
                                                                                  <select value={this.state.node_id} onChange={this.nodeIdChangeHandler}>
+                                                                                 <option  value="">Choose Node</option>
                                                                                 {this.state.data3.map((node) => <option key={node._id} value={node._id}>{node.node_name}</option>)}
                                                                             </select>
                                                                         </div>
@@ -485,9 +573,11 @@ class AddSensor extends Component {
                                                                         <div class="form-group">
                                                                             <select id="status" class="form-control " onChange={this.statusChangeHandler} name="status" required>
                                                                                 <option value="" selected disabled hidden>Choose Node status</option>
-                                                                                <option value="A">Active</option>
-                                                                                <option value="I">Inactive</option>
-                                                                                <option value="UM">Under Maintainence </option>
+                                                                                <option value="Active">Active</option>
+                                                                        <option value="Inactive">Inactive</option>
+                                                                        <option value="Under Maintainence">Under Maintainence </option>
+                                                                        <option value="Turn On">Turn On</option>
+                                                                        <option value="Turn Off">Turn Off </option>
 
                                                                             </select>
                                                                         </div>
@@ -495,6 +585,8 @@ class AddSensor extends Component {
                                                                         <div class="form-group">
                                                                             <input  onChange={this.locationChangeHandler} type="text" class="form-control"
                                                                                 name="location" placeholder="location" required="true" />
+
+                                                                            
                                                                         </div>
                                                                         <button onClick={this.submitSensorData} class="btn btn-primary">Add Sensor</button>
                                                                     </div>
@@ -527,24 +619,24 @@ class AddSensor extends Component {
 
 
                                                                         <div class="form-group">
-                                                                            <input onChange={this.handleClusterId} type="text" class="form-control" name="uclusterID"
+                                                                            <input onChange={this.handleSensorId} type="text" class="form-control" name="usensorID"
                                                                                 placeholder="Enter Sensor ID" required="true" />
                                                                         </div>
 
                                                                     </div >
                                                                   
-                                                                    <button onClick={this.searchClusterData} class="btn btn-primary">Search</button>
+                                                                    <button onClick={this.searchSensorById} class="btn btn-primary">Search</button>
                                                                     
                                                                    
                                                                 </div>
 
                                                                 <div class="form-group">
-                                                                    <input onChange={this.handleClusterName} defaultValue={this.state.uclustername} type="text" class="form-control" name="uclustername"
-                                                                        placeholder="Node Name"  />
+                                                                    <input onChange={this.handleSensorName} defaultValue={this.state.usensorname} type="text" class="form-control" name="usensorname"
+                                                                        placeholder="Sensor Name"  />
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <input onChange={this.handleClusterStatus} defaultValue={this.state.uclusterstatus} type="text" class="form-control" name="uclusterstatus"
-                                                                        placeholder="Node Status"  />
+                                                                    <input onChange={this.handleSensorStatus} defaultValue={this.state.usensorstatus} type="text" class="form-control" name="usensorstatus"
+                                                                        placeholder="Sensor Status"  />
                                                                 </div>
 
 

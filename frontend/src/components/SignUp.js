@@ -43,7 +43,9 @@ export default class SignUp extends Component {
     }
 
     handleusertypeChange(e) {
+        console.log(e.target.value)
         this.setState({ usertype: e.target.value });
+        
       }
 
       handlephoneNumberChange(e) {
@@ -54,11 +56,11 @@ export default class SignUp extends Component {
         this.setState({ password: e.target.value });
         e.target.value == "" ? document.getElementById("password-error").innerHTML = "Please enter your email" :
             document.getElementById("password-error").innerHTML = "";
-        const regex = /^([a-zA-Z0-9@*#]{8,15})$/;
-        if (!regex.test(String(this.state.password))) {
-            document.getElementById("password-error").innerHTML = "Password must consists of at least 8 alphanumeric characters and not more than 15 characters";
-            return false;
-        }
+        // const regex = /^([a-zA-Z0-9@*#]{8,15})$/;
+        // if (!regex.test(String(this.state.password))) {
+        //     document.getElementById("password-error").innerHTML = "Password must consists of at least 8 alphanumeric characters and not more than 15 characters";
+        //     return false;
+        // }
     }
     handleEmailChange(e) {
         this.setState({ email: e.target.value });
@@ -135,10 +137,11 @@ export default class SignUp extends Component {
                                 <div id="lname-error" class="error"></div>
 
                                 <div class="form-group">
-                                <select onChange={this.handleusertypeChange} id = "usertype" class = "form-control " name = "usertype" required>
+                                <select onChange={this.handleusertypeChange}  class = "form-control " name = "usertype" required>
+                                <option value="">Choose Role</option>
                                   <option value="Farmer">Farmer</option>
-                                  <option value="IOT">IOT support</option>
-                                  <option value="manager">Infrastructure manager</option>
+                                  <option value="IOT support">IOT support</option>
+                                  <option value="Infrastructure manager">Infrastructure manager</option>
                                 </select>
                                 </div>
 

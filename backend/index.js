@@ -166,15 +166,9 @@ app.post('/getClusterById', function (req, res) {
         _id: id
         //user_email: 'based on selected farmer from getFarmerList (previous page)' 
         //  Here we wil pick the select cluster_id,cluster_name, location, status for a particular farmer
-     }  //success callback of finduser
+     }  //success callback of find cluster by id
     ,function (err, rows) {
-                    if (err) {
-                        console.log("failure callback 1")
-                        res.status(401).json({
-                            message: 'failed to fetch'
-                        });
-                    }
-                    if (rows.length > 0) {
+                   if (rows) {
                         console.log("rows generated",rows.length)
                         console.log("rows data",rows)
                         res.status(200).json({
@@ -182,13 +176,83 @@ app.post('/getClusterById', function (req, res) {
                             message: 'data fetched'
                         });
                     }
-                    else {
-                        console.log("failure callback 2")
+                    if (err) {
+                        console.log("failure callback 1",err +"rows"+rows)
                         res.status(400).json({
-        
-                            message: 'db access error'
+                            status:400,
+                            message: 'failed to fetch'
+                        });
+                    } 
+                    // else {
+                    //     console.log("failure callback 2")
+                    //     res.status(401).json({
+                    //         message: 'db access error'
+                    //     });
+                    // }
+                  
+                });
+});
+app.post('/getNodeById', function (req, res) {
+    var id = req.body.id
+    console.log("Get Node by Id method called..  " );
+    console.log("id of Node is  " ,id);
+    Node.find({
+        _id: id      
+     }  
+    ,function (err, rows) {
+                   if (rows) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(200).json({
+                            data:rows,
+                            message: 'data fetched'
                         });
                     }
+                    if (err) {
+                        console.log("failure callback 1",err +"rows"+rows)
+                        res.status(400).json({
+                            status:400,
+                            message: 'failed to fetch'
+                        });
+                    } 
+                    // else {
+                    //     console.log("failure callback 2")
+                    //     res.status(401).json({
+                    //         message: 'db access error'
+                    //     });
+                    // }
+                  
+                });
+});
+app.post('/getSensorById', function (req, res) {
+    var id = req.body.id
+    console.log("Get Sensor by Id method called..  " );
+    console.log("id of Sensor is  " ,id);
+    sensor_added.find({
+        _id: id      
+     }  
+    ,function (err, rows) {
+                   if (rows) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(200).json({
+                            data:rows,
+                            message: 'data fetched'
+                        });
+                    }
+                    if (err) {
+                        console.log("failure callback 1",err +"rows"+rows)
+                        res.status(400).json({
+                            status:400,
+                            message: 'failed to fetch'
+                        });
+                    } 
+                    // else {
+                    //     console.log("failure callback 2")
+                    //     res.status(401).json({
+                    //         message: 'db access error'
+                    //     });
+                    // }
                   
                 });
 });
@@ -197,6 +261,68 @@ app.post('/deleteClusterById', function (req, res) {
     console.log("API /deletClusterById called..  " );
     console.log("id of cluster is  " ,id);
     Cluster.findOneAndDelete({
+        _id: id
+    }
+    ,function (err, rows) {
+                    if (err) {
+                        console.log("failure to delete")
+                        res.status(401).json({
+                            message: 'failed to delete'
+                        });
+                    }
+                    if (rows.length > 0) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(201).json({
+                            data:rows,
+                            message: 'data fetched'
+                        });
+                    }
+                    else {
+                        console.log("deleted successfully")
+                        res.status(200).json({
+                            message: 'Not able to fetch details since its deleted!'
+                        });
+                    }
+                  
+                });
+});
+app.post('/deleteNodeById', function (req, res) {
+    var id = req.body.id
+    console.log("API /deleteNodeById called..  " );
+    console.log("id of Node is  " ,id);
+    Node.findOneAndDelete({
+        _id: id
+    }
+    ,function (err, rows) {
+                    if (err) {
+                        console.log("failure to delete")
+                        res.status(401).json({
+                            message: 'failed to delete'
+                        });
+                    }
+                    if (rows.length > 0) {
+                        console.log("rows generated",rows.length)
+                        console.log("rows data",rows)
+                        res.status(201).json({
+                            data:rows,
+                            message: 'data fetched'
+                        });
+                    }
+                    else {
+                        console.log("deleted successfully")
+                        res.status(200).json({
+                            message: 'Not able to fetch details since its deleted!'
+                        });
+                    }
+                  
+                });
+});
+app.post('/deleteSensorById', function (req, res) {
+    var id = req.body.id
+    console.log("API /deleteSensorById called..  " );
+    console.log("id of sensor is  " ,id);
+    sensor_added.findOneAndDelete({
         _id: id
     }
     ,function (err, rows) {
@@ -253,7 +379,62 @@ app.post('/updateCluster', function (req, res) {
         })
 
     
-
+app.post('/updateNode', function (req, res) {
+            console.log("unodeID in /updateNode",req.body.unodeID)
+            console.log("new_status in /updateNode",req.body.new_status)
+            Node.findOneAndUpdate({ _id:  req.body.unodeID},
+                {
+                  $set: {
+                    status: req.body.new_status,
+                  }
+                },{ new: true }, function (err, result) {
+                        if (result) {
+                            console.log(result);
+                            console.log("in update success block",result)
+                            res.status(200).json({
+                                data:result,
+                                message: 'data updated successfully'
+                            });
+                            //return; //this is so important if we got the result just return , dont execute below calls
+                        }else if(err)
+                        {
+                        console.log(err, "in update failure block error data below")
+                        res.status(400).json({
+                            data:rows,
+                            message: 'Failed to fetch data'
+                        });
+                        }
+        
+                    })
+                })
+app.post('/updateSensor', function (req, res) {
+                    console.log("usensorID in /updateSensor",req.body.usensorID)
+                    console.log("new_status in /updateSensor",req.body.new_status)
+                    sensor_added.findOneAndUpdate({ _id:  req.body.usensorID},
+                        {
+                          $set: {
+                            sensor_status: req.body.new_status,
+                          }
+                        },{ new: true }, function (err, result) {
+                                if (result) {
+                                    console.log(result);
+                                    console.log("in update success block",result)
+                                    res.status(200).json({
+                                        data:result,
+                                        message: 'data updated successfully'
+                                    });
+                                    //return; //this is so important if we got the result just return , dont execute below calls
+                                }else if(err)
+                                {
+                                console.log(err, "in update failure block error data below")
+                                res.status(400).json({
+                                    data:rows,
+                                    message: 'Failed to fetch data'
+                                });
+                                }
+                
+                            })
+                        })     
 app.post('/addcluster', function (req, res) {
     console.log("adding clusters....")
    var clusterName= req.body.clusterName;
@@ -341,7 +522,7 @@ newNodedata.save().then((node)=> {
 })
 
 app.post('/Signup', function (req, res) {
-    console.log("Registering New User...");
+    console.log("Registering New User with below details...");
         var  firstName = req.body.firstName;
         var lastName = req.body.lastName;
         var usertype = req.body.usertype;
@@ -349,7 +530,7 @@ app.post('/Signup', function (req, res) {
         var password = req.body.password;
 
         console.log("email: ", email + " name: ", firstName +
-      "lastname: ", lastName + "password", password)
+      "lastname: ", lastName + "password", password+ "Role",usertype)
 
       var newUserdata = new User({
         firstName: req.body.firstName,
@@ -379,7 +560,7 @@ app.post('/Signup', function (req, res) {
 
 
 
-//Sandeep's Api
+
 app.get('/getSensorList', function (req, res) {
     var  id = req.body.id
  console.log("Get sensor list  " );
@@ -517,8 +698,14 @@ newSensordata.save().then((sensor)=> {
 
 app.post('/filterSensorByDates', function (req, res){
     console.log("API /filterSensorByDates called.." ,req.body)
+    var  end_date = req.body.end+ " 00:00:00"
+    var start_date = req.body.start + " 00:00:00"
+    var sensor_n =  req.body.sensor_name
+    console.log("inside call start_date ", start_date)
+    console.log("inside call end_date ",end_date)   
     sensor_reading.find({
-    created_date :{ $lte: req.body.end,$gte: req.body.start} 
+    created_date :{ $lte:end_date  ,$gte: start_date },
+    sensor_name : sensor_n
     },function (err,result) {
             if (result) {
                 console.log("successCallback callback 1")

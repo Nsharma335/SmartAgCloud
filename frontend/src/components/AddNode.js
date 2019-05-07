@@ -9,10 +9,11 @@ import Moisture from './Moisture';
 //npmimport '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 class Addnode extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {            
             node_name: "",
+            unodeID:"",
             cluster_id: "",
             status: "",
             location: "",
@@ -20,6 +21,10 @@ class Addnode extends Component {
             email : "",
             data1: [],
             data2: [],
+            unodename:"",
+            unodestatus:"",
+            new_status:"",
+            
         }        
         this.nodeNameChangeHandler = this.nodeNameChangeHandler.bind(this);
         this.clusterIdChangeHandler = this.clusterIdChangeHandler.bind(this);
@@ -27,24 +32,46 @@ class Addnode extends Component {
         this.locationChangeHandler = this.locationChangeHandler.bind(this);
         this.dateChangeHandler = this.dateChangeHandler.bind(this);
         this.submitNodeData = this.submitNodeData.bind(this);
+        //this.changeHandlerNodeId=this.changeHandlerNodeId.bind(this);
         //this.fieldTypeChangeHandler=this.fieldTypeChangeHandler.bind(this);
         this.setFarmerEmail=this.setFarmerEmail.bind(this);
-        //this.setFarmerUpdateEmail=this.setFarmerUpdateEmail.bind(this);
+        this.setFarmerUpdateEmail=this.setFarmerUpdateEmail.bind(this);
         this.deleteNodeData=this.deleteNodeData.bind(this);
         this.updateNodeData=this.updateNodeData.bind(this);
+        this.handleNodeName=this.handleNodeName.bind(this);
+        this.handleNodeStatus=this.handleNodeStatus.bind(this);
+        this.searchNodeData=this.searchNodeData.bind(this);
+        this.updateStatusChangeHandler=this.updateStatusChangeHandler.bind(this);
     }
 
+    handleNodeIDChangeHandler =(event) =>
+    {
+        console.log(this.state.unodeID)
+    this.setState({unodeID: event.target.value})
+    }
+    
     nodeNameChangeHandler(e) {
         this.setState({ node_name: e.target.value });
         console.log(this.state.node_name)
 
     }
-    clusterIdChangeHandler(e) {
-        this.setState({ cluster_id: e.target.value });
-        console.log("cluster id: ", this.state.cluster_id)
+    handleNodeName(e)
+    {
+        this.setState({ unodename: e.target.value });
+        console.log(this.state.unodename)
+    }
+  
+    handleNodeStatus(e)
+    {
+        this.setState({ unodestatus: e.target.value });
+        //console.log(this.state.unodestatus)
 
     }
+    clusterIdChangeHandler(e) {
+        this.setState({ cluster_id: e.target.value });
+        console.log("Cluster id: ", this.state.cluster_id)
 
+    }
     statusChangeHandler(e) {
         this.setState({ status: e.target.value });
 
@@ -58,17 +85,82 @@ class Addnode extends Component {
         this.setState({ created_date: e.target.value });
     }
     
-    deleteNodeData(e)
-    {
-        e.preventDefault();
-        document.getElementById("update-result").innerHTML = "Node deleted successfully!";
-         
+    updateStatusChangeHandler(e){
+        this.setState({ new_status: e.target.value });
     }
+
     updateNodeData(e)
     {
         e.preventDefault();
-        document.getElementById("update-result").innerHTML = "Node updated successfully!";
+        const data={
+            
+            unodeID:this.state.unodeID,
+            new_status:this.state.new_status,
+        }
+        axios.post('http://localhost:3001/updateNode', data)
+                .then(response => {
+                    console.log("Status Code : ", response);
+                    
+                    if (response.status == 200) {
+                        document.getElementById("update-result").innerHTML = "Node updated successfully!";
+                        // window.location.href = "http://localhost:3000/dashboard";
+                    }
+                    
+                });
     }
+    searchNodeData(e){
+        e.preventDefault();
+         var self=this;
+        const data = {
+            id: this.state.unodeID
+        }
+        console.log(data)
+        axios.post("http://localhost:3001/getNodeById", data ,{ withCredentials: true })
+            .then(function (response) {
+                console.log("response",response)
+                //.log("response in getClusterList", response.data.data[0].status);
+                if (response.data.data.length == 0) {
+                    document.getElementById("update-result").innerHTML = "Node not found!";
+                    self.setState({
+                        unodename: "",
+                        unodestatus: ""
+                    })
+                    // window.location.href = "http://localhost:3000/dashboard";
+                }
+                if (response.status == 400) {
+                    document.getElementById("update-result").innerHTML = "Node not found!";
+                    // window.location.href = "http://localhost:3000/dashboard";
+                }
+                if (response.data.data.length != 0) {
+                    self.setState({
+                        unodename: response.data.data[0].node_name,
+                        unodestatus: response.data.data[0].status
+                    })
+                  
+                }
+               
+            })
+    }
+
+    
+    deleteNodeData(e){
+        e.preventDefault();
+        var self=this;
+           const data = {
+               id: this.state.unodeID
+           }
+           console.log(data)
+           axios.post("http://localhost:3001/deleteNodeById", data)
+               .then(function (response) {
+                   console.log("response in getClusterList", response);
+   
+                   if (response.status === 200) {
+                    document.getElementById("update-result").innerHTML = "Node deleted successfully!";
+                    // window.location.href = "http://localhost:3000/dashboard";
+                }
+               })
+       }
+
     setFarmerEmail(e) {
         e.preventDefault();
         const self = this
@@ -152,7 +244,7 @@ class Addnode extends Component {
                 console.log("Status Code : ", response);
 
                 if (response.status == 201) {
-                    document.getElementById("success-result").innerHTML = "New node Added!";
+                    document.getElementById("success-result").innerHTML = "New node Added!Please note the Id for future reference.<br>"+response.data.data._id;
                     // window.location.href = "http://localhost:3000/dashboard";
                 }
             });
@@ -406,16 +498,18 @@ class Addnode extends Component {
           </div> */}
 
                                                                         <div class="form-group">
-                                                                            Select Farmer
+                                                                          
                                                                                  <select value={this.state.email} onChange={this.setFarmerEmail}>
+                                                                                 <option  value="">Choose farmer</option>
                                                                                 {this.state.data1.map((farmer) => <option key={farmer.email} value={farmer.email}>{farmer.firstName}</option>)}
                                                                             </select>
                                                                         </div>
 
 
                                                                         <div class="form-group">
-                                                                            Select cluster
+                                                                           
                                                                                  <select value={this.state.cluster_id} onChange={this.clusterIdChangeHandler}>
+                                                                                 <option  value="">Choose Cluster</option>
                                                                                 {this.state.data2.map((cluster) => <option key={cluster._id} value={cluster._id}>{cluster.cluster_name}</option>)}
                                                                             </select>
                                                                         </div>
@@ -425,9 +519,11 @@ class Addnode extends Component {
                                                                         <div class="form-group">
                                                                             <select id="status" class="form-control " onChange={this.statusChangeHandler} name="status" required>
                                                                                 <option value="" selected disabled hidden>Choose Node status</option>
-                                                                                <option value="A">Active</option>
-                                                                                <option value="I">Inactive</option>
-                                                                                <option value="UM">Under Maintainence </option>
+                                                                                <option value="Active">Active</option>
+                                                                        <option value="Inactive">Inactive</option>
+                                                                        <option value="Under Maintainence">Under Maintainence </option>
+                                                                        <option value="Turn On">Turn On</option>
+                                                                        <option value="Turn Off">Turn Off </option>
 
                                                                             </select>
                                                                         </div>
@@ -466,23 +562,22 @@ class Addnode extends Component {
 
 
                                                                         <div class="form-group">
-                                                                            <input onChange={this.handleClusterId} type="text" class="form-control" name="uclusterID"
-                                                                                placeholder="Enter Node ID" required="true" />
+                                                                            <input  onChange={this.handleNodeIDChangeHandler} type="text" class="form-control" name="unodeID" placeholder="Enter Node ID" />
                                                                         </div>
 
                                                                     </div >
                                                                   
-                                                                    <button onClick={this.searchClusterData} class="btn btn-primary">Search</button>
+                                                                    <button onClick={this.searchNodeData} class="btn btn-primary">Search</button>
                                                                     
                                                                    
                                                                 </div>
 
                                                                 <div class="form-group">
-                                                                    <input onChange={this.handleClusterName} defaultValue={this.state.uclustername} type="text" class="form-control" name="uclustername"
+                                                                    <input onChange={this.handleNodeName} defaultValue={this.state.unodename} type="text" class="form-control" name="unodename"
                                                                         placeholder="Node Name"  />
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <input onChange={this.handleClusterStatus} defaultValue={this.state.uclusterstatus} type="text" class="form-control" name="uclusterstatus"
+                                                                    <input onChange={this.handleNodeStatus} defaultValue={this.state.unodestatus} type="text" class="form-control" name="unodestatus"
                                                                         placeholder="Node Status"  />
                                                                 </div>
 

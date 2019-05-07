@@ -39,7 +39,9 @@ class ListSensorReadings extends Component {
         var self = this;
         const data = {
             start: this.state.fromDate,
-            end: this.state.toDate
+            end: this.state.toDate,
+            sensor_name: this.state.sensor.sensor_name
+
         };
       axios.post("http://localhost:3001/filterSensorByDates",data)
         .then(function (response) {
