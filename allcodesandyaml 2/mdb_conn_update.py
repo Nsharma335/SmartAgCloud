@@ -5,6 +5,7 @@ from Humid_sensor_sim import Humid_sensor_sim as HS
 import datetime as dt
 import time
 import yaml
+import re
 
 class mdb_conn_update ():
     
@@ -44,7 +45,8 @@ class mdb_conn_update ():
               for docs in collection_added.find({"sensor_status": "A"}) :
                   sensor_name = docs['sensor_name']
                   sensor_type = docs['sensor_type']
-              
+                  sensor_id = str(docs['_id'])
+                  #print("new sensor id",s)
                   if(sensor_type == 'L') :
                      L_sense.update_sensor()
                      sensor_reading = L_sense.read_sensor()
@@ -55,7 +57,7 @@ class mdb_conn_update ():
                      H_sense.update_sensor()
                      sensor_reading = H_sense.read_sensor()
      
-                  collection_reading.insert_one({"sensor_name": docs["sensor_name"],"sensor_type": docs["sensor_type"],"sensor_status": docs["sensor_status"],"sensor_location": docs["sensor_location"],"sensor_reading": sensor_reading,"created_date" : dt.datetime.now()})
+                  collection_reading.insert_one({"sensor_id": sensor_id,"sensor_name": docs["sensor_name"],"sensor_type": docs["sensor_type"],"sensor_status": docs["sensor_status"],"sensor_location": docs["sensor_location"],"sensor_reading": sensor_reading,"created_date" : dt.datetime.now()})
               time.sleep( refresh_rate )
           connection.close()
           
