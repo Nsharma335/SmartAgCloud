@@ -5,11 +5,7 @@ import '../theme.css'
 import Chart from 'react-google-charts';
 import LiquidFillGauge from 'react-liquid-gauge';
 import Moisture from'./Moisture';
-<<<<<<< HEAD
-import ListFarmers from './ListFarmers';
-=======
 import ListFarmers from './ListFarmers'
->>>>>>> 4da2bbbc0b2bd120c5cfb6e0aea8c80b550e0ff9
 //npmimport '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 class Dashboard extends Component {
@@ -414,16 +410,11 @@ axios.post("http://localhost:3001/getSensorReadings")
                                 <div class="au-card au-card--bg-blue au-card-top-countries m-b-40">
                                     <div class="au-card-inner">
                                         <div class="table-responsive">
-<<<<<<< HEAD
-                                        <ListFarmers></ListFarmers>
-                                            
-=======
                                             <table class="table table-top-countries">
                                               <tbody>
                                                 <ListFarmers></ListFarmers>
                                               </tbody>
                                             </table>
->>>>>>> 4da2bbbc0b2bd120c5cfb6e0aea8c80b550e0ff9
                                         </div>
                                     </div>
                                 </div>
